@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import useRedirect from "../../hooks/useRedirect";
 import { useEffect } from "react";
-import { errorUser, successUser } from "../../redux/user/userSlice";
+import { errorUser } from "../../redux/user/userSlice";
 import {
 	Box,
 	Button,
@@ -15,6 +15,7 @@ import { Controller, useForm } from "react-hook-form";
 import { loginInitialValues } from "./initialValues";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginValidationSchema } from "./validationSchema";
+import { login } from "../../axios/auth";
 
 const LoginForm = () => {
 	const dispatch = useDispatch();
@@ -23,9 +24,8 @@ const LoginForm = () => {
 		defaultValues: loginInitialValues,
 		resolver: yupResolver(loginValidationSchema),
 	});
-	const onSubmit = (data) => {
-		console.log(data);
-		dispatch(successUser(data.mail));
+	const onSubmit = async (data) => {
+		await login(dispatch, data.dni, data.password);
 	};
 	useRedirect("/");
 	useEffect(() => {
@@ -38,20 +38,19 @@ const LoginForm = () => {
 				<Box sx={{ display: "flex", alignItems: "center" }}>
 					<AccountCircle sx={{ color: "action.active", mr: 1, my: 0.5 }} />
 					<Controller
-						name="mail"
+						name="dni"
 						control={control}
 						render={({ field }) => (
 							<TextField
+								sx={{ flexGrow: 1 }}
 								{...field}
-								name="mail"
-								type="email"
-								placeholder="Mail"
+								name="dni"
+								type="number"
+								placeholder="DNI"
 								variant="outlined"
-								error={String(error).includes("usuario")}
+								error={String(error).includes("dni")}
 								required
-								helperText={
-									String(error).includes("usuario") ? String(error) : ""
-								}
+								helperText={String(error).includes("dni") ? String(error) : ""}
 							/>
 						)}
 					/>
@@ -63,6 +62,7 @@ const LoginForm = () => {
 						control={control}
 						render={({ field }) => (
 							<TextField
+								sx={{ flexGrow: 1 }}
 								{...field}
 								name="password"
 								type="password"
@@ -82,11 +82,24 @@ const LoginForm = () => {
 				<Button
 					type="submit"
 					variant="contained"
-					loading={isLoading}
-					color="primary">
+					disabled={isLoading}
+					color="primary"
+					onClick={handleSubmit(onSubmit)}>
 					Ingresar
 				</Button>
-				{error && <Typography>{error.toString()}</Typography>}
+				<Typography
+					fontSize={14}
+					align="center">
+					Olvidaste tu contraseña? Recuperar contraseña
+				</Typography>
+				{error && (
+					<Typography
+						fontSize={14}
+						align="center"
+						color={"error"}>
+						{error}
+					</Typography>
+				)}
 			</FormControl>
 		</form>
 	);

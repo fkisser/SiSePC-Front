@@ -1,4 +1,4 @@
-import { Logout } from "@mui/icons-material";
+import { Logout, AccountBox } from "@mui/icons-material";
 import {
 	Box,
 	Button,
@@ -8,13 +8,15 @@ import {
 	ListItemButton,
 	ListItemIcon,
 	ListItemText,
+	Typography,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { openConfirm } from "../../redux/confirm/confirmSlice";
 
 const NavListDrawer = ({ navLinks, setOpen }) => {
 	const dispatch = useDispatch();
+	const { currentUser } = useSelector((state) => state.user);
 	return (
 		<Box
 			color={"white"}
@@ -25,7 +27,9 @@ const NavListDrawer = ({ navLinks, setOpen }) => {
 				width: 350,
 				height: "100vh",
 				justifyContent: "center",
+				gap: 1,
 			}}>
+			<Typography textAlign={"center"}>Hola {currentUser.nombre}!</Typography>
 			<nav>
 				<List>
 					{navLinks?.map((item) => (
@@ -35,7 +39,7 @@ const NavListDrawer = ({ navLinks, setOpen }) => {
 							<ListItemButton
 								component={NavLink}
 								to={item.path}
-								sx={{ gap: 1 }}
+								sx={{ gap: 2 }}
 								onClick={() => setOpen(false)}>
 								<ListItemIcon
 									sx={{
@@ -55,7 +59,18 @@ const NavListDrawer = ({ navLinks, setOpen }) => {
 				</List>
 			</nav>
 			<Button
-				startIcon={<Logout />}
+				component={NavLink}
+				to={""} //acá debería crear la página del perfil del tutor
+				endIcon={<AccountBox />}
+				variant="contained"
+				color="secondary"
+				onClick={() => {
+					setOpen(false);
+				}}>
+				Mi perfil
+			</Button>
+			<Button
+				endIcon={<Logout />}
 				variant="contained"
 				color="secondary"
 				onClick={() => {

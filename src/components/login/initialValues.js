@@ -1,4 +1,4 @@
 export const loginInitialValues = {
-  mail: '',
+  dni: '',
   password: ''
 }
