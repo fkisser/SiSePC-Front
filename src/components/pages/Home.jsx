@@ -5,10 +5,12 @@ const Home = ({ navLinks }) => {
 	return (
 		<Container
 			sx={{
-				display: "grid",
+				display: "flex",
+				flexWrap: { xs: "wrap", lg: "nowrap" },
 				justifyContent: "center",
 				alignItems: "center",
-				height: "90vh",
+				height: "85vh",
+				gap: 2,
 			}}>
 			{navLinks?.map((navLink) => {
 				if (navLink.title !== "Home" && navLink.title !== "Cerrar Sesión")

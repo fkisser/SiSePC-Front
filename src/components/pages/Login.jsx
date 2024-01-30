@@ -5,7 +5,7 @@ const Login = () => {
 	return (
 		<Container
 			sx={{
-				mt: { xs: "10vh", sm: "20vh" },
+				mt: { xs: "10vh", sm: "15vh" },
 				display: "grid",
 				gap: 10,
 			}}>

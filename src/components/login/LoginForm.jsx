@@ -5,6 +5,7 @@ import { errorUser } from "../../redux/user/userSlice";
 import {
 	Box,
 	Button,
+	CircularProgress,
 	FormControl,
 	FormLabel,
 	TextField,
@@ -85,21 +86,21 @@ const LoginForm = () => {
 					disabled={isLoading}
 					color="primary"
 					onClick={handleSubmit(onSubmit)}>
-					Ingresar
+					{isLoading ? <CircularProgress size={24} /> : "Ingresar"}
 				</Button>
 				<Typography
 					fontSize={14}
 					align="center">
 					Olvidaste tu contraseña? Recuperar contraseña
 				</Typography>
-				{error && (
+				{/* {error && (
 					<Typography
 						fontSize={14}
 						align="center"
 						color={"error"}>
 						{error}
 					</Typography>
-				)}
+				)} */}
 			</FormControl>
 		</form>
 	);
