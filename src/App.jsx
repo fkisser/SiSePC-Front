@@ -1,8 +1,4 @@
-import GroupsIcon from "@mui/icons-material/Groups";
 import HomeIcon from "@mui/icons-material/Home";
-import SchoolIcon from "@mui/icons-material/School";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import DescriptionIcon from "@mui/icons-material/Description";
 import Navbar from "./components/navbar/Navbar";
 import { Container } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
@@ -16,26 +12,30 @@ import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import Student from "./components/pages/Student";
 
 const navLinks = [
-	{ title: "Home", path: "/", icon: <HomeIcon sx={{ fontSize: "30px" }} /> },
+	{
+		title: "Principal",
+		path: "/",
+		icon: <HomeIcon sx={{ fontSize: "30px" }} />,
+	},
 	{
 		title: "Estudiantes",
 		path: "/estudiantes",
-		icon: <GroupsIcon sx={{ fontSize: "30px" }} />,
+		icon: "group",
 	},
 	{
 		title: "Cátedras",
 		path: "/catedras",
-		icon: <SchoolIcon sx={{ fontSize: "30px" }} />,
+		icon: "school",
 	},
 	{
 		title: "Planes de Estudio y Equivalencias",
 		path: "/planes",
-		icon: <FormatListNumberedIcon sx={{ fontSize: "30px" }} />,
+		icon: "format_list_numbered",
 	},
 	{
 		title: "Resoluciones y Reglamentos",
 		path: "/resoluciones",
-		icon: <DescriptionIcon sx={{ fontSize: "30px" }} />,
+		icon: "description",
 	},
 ];
 

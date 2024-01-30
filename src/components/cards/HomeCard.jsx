@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Icon, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
 
 const HomeCard = ({ data }) => {
@@ -8,21 +8,26 @@ const HomeCard = ({ data }) => {
 			component={NavLink}
 			to={path}
 			variant="outlined"
-			startIcon={icon}
-			size={"large"}
 			sx={{
-				width: { xs: "100%", md: "500px" },
-				height: { xs: "100px", md: "150px", lg: "100%" },
+				width: { xs: "100%", md: "45%" },
+				height: { xs: "25%", md: "50%", lg: "100%" },
 				textAlign: "center",
 				transition: "all ease .5s",
+				display: "flex",
+				flexDirection: { xs: "row", md: "column" },
+				flexGrow: { lg: 1 },
+				gap: 1,
+				alignItems: "center",
+				justifyContent: "center",
 				"&:hover": {
 					backgroundColor: "#046CBB",
 					color: "white",
 					transition: "all ease .5s",
-					fontSize: { xs: "18px", sm: "22px" },
+					fontSize: { xs: "18px", sm: "50px" },
 				},
 			}}>
-			{title}
+			<Icon>{icon}</Icon>
+			<Typography component={"h1"}>{title}</Typography>
 		</Button>
 	);
 };

@@ -7,7 +7,6 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-import "./index.css";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { themeOptions } from "./appTheme.js";
 import { BrowserRouter } from "react-router-dom";

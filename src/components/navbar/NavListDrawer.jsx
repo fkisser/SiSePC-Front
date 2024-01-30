@@ -1,12 +1,13 @@
-import { Logout, AccountBox } from "@mui/icons-material";
+import { Logout, AccountBox, CloseOutlined } from "@mui/icons-material";
 import {
 	Box,
 	Button,
 	Divider,
+	Icon,
+	IconButton,
 	List,
 	ListItem,
 	ListItemButton,
-	ListItemIcon,
 	ListItemText,
 	Typography,
 } from "@mui/material";
@@ -24,14 +25,32 @@ const NavListDrawer = ({ navLinks, setOpen }) => {
 			sx={{
 				display: "flex",
 				flexDirection: "column",
-				width: 350,
+				width: { xs: "100vw", sm: 350 },
 				height: "100vh",
 				justifyContent: "center",
-				gap: 1,
+				gap: 2,
+				position: "relative",
 			}}>
-			<Typography textAlign={"center"}>Hola {currentUser.nombre}!</Typography>
+			<IconButton
+				size="large"
+				sx={{
+					display: { xs: "flex", sm: "none" },
+					position: "absolute",
+					top: 3,
+					right: 3,
+				}}
+				onClick={() => {
+					setOpen(false);
+				}}>
+				<CloseOutlined fontSize="40px" />
+			</IconButton>
+			<Typography
+				textAlign={"center"}
+				fontSize={25}>
+				Hola {currentUser.nombre}!
+			</Typography>
 			<nav>
-				<List>
+				<List disablePadding>
 					{navLinks?.map((item) => (
 						<ListItem
 							disablePadding
@@ -41,13 +60,13 @@ const NavListDrawer = ({ navLinks, setOpen }) => {
 								to={item.path}
 								sx={{ gap: 2 }}
 								onClick={() => setOpen(false)}>
-								<ListItemIcon
+								<Icon
 									sx={{
 										display: { xs: "none", sm: "flex" },
 										justifyContent: "center",
 									}}>
 									{item.icon}
-								</ListItemIcon>
+								</Icon>
 								<Divider
 									orientation="vertical"
 									flexItem={true}

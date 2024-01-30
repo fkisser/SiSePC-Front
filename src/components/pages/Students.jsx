@@ -4,6 +4,8 @@ import { students } from "../../fakeData/students";
 import Checkbox from "@mui/material/Checkbox";
 import { Star, StarBorder, Folder, Add } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
+import AddStudent from "../student/AddStudent";
+import { useState } from "react";
 
 const VISIBLE_FIELDS = [
 	{ field: "apellido", headerName: "Apellido", flex: 1 },
@@ -59,8 +61,14 @@ const VISIBLE_FIELDS = [
 
 const Students = () => {
 	const visibleStudents = [...students];
+	const [open, setOpen] = useState(false);
 	return (
-		<Box sx={{ display: "grid", gap: 2 }}>
+		<Box
+			sx={{
+				display: "flex",
+				flexDirection: "column",
+				gap: 2,
+			}}>
 			<Box
 				sx={{
 					display: "flex",
@@ -74,7 +82,10 @@ const Students = () => {
 				</Typography>
 				<Button
 					variant="contained"
-					startIcon={<Add />}>
+					startIcon={<Add />}
+					onClick={() => {
+						setOpen(true);
+					}}>
 					Agregar
 				</Button>
 			</Box>
@@ -87,6 +98,11 @@ const Students = () => {
 						showQuickFilter: true,
 					},
 				}}
+				autoPageSize={true}
+			/>
+			<AddStudent
+				open={open}
+				setOpen={setOpen}
 			/>
 		</Box>
 	);
