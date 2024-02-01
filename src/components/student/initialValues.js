@@ -1,4 +1,15 @@
 export const studentInitialValues = {
-  mail: '',
-  password: ''
+  apellido: "",
+  nombre: "",
+  dni: "",
+  mail: "",
+  celular: "",
+  ciudad: "",
+  cursando: false,
+  tutores: [],
+  trabaja: false,
+  relCarrera: false,
+  horarioTrabajo: "",
+  detallesTrabajo: "",
+  plan: "",
 }
