@@ -4,10 +4,12 @@ import persistStore from "redux-persist/es/persistStore";
 import storage from "redux-persist/lib/storage";
 import userReducer from "./user/userSlice";
 import confirmReducer from "./confirm/confirmSlice";
+import studentsReducer from "./students/studentsSlice";
 
 const reducers = combineReducers({
   user: userReducer,
-  confirm: confirmReducer
+  confirm: confirmReducer,
+  students: studentsReducer
 });
 
 const persistConfig = {
