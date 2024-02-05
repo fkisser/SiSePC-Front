@@ -1,8 +1,10 @@
 // form dialog, ver validaciones y uso en login
 
 import {
+	Backdrop,
 	Box,
 	Button,
+	CircularProgress,
 	Dialog,
 	DialogActions,
 	DialogContent,
@@ -10,12 +12,20 @@ import {
 	FormControl,
 	FormLabel,
 	Input,
+	InputLabel,
+	MenuItem,
+	Paper,
+	Select,
 	TextField,
+	Typography,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { studentInitialValues } from "./initialValues";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { studentValidationSchema } from "./validationSchema";
+import { useDispatch, useSelector } from "react-redux";
+import { createStudent, fetchStudents } from "../../axios/students";
+import { useState } from "react";
 
 const AddStudent = ({ open, setOpen }) => {
 	const handleClose = () => {
@@ -24,9 +34,24 @@ const AddStudent = ({ open, setOpen }) => {
 	const { control, handleSubmit } = useForm({
 		defaultValues: studentInitialValues,
 		resolver: yupResolver(studentValidationSchema),
+		reValidateMode: "onChange",
 	});
-	const onSubmit = (data) => {
+	const dispatch = useDispatch();
+	const { token } = useSelector((state) => state.user.currentUser);
+	const onSubmit = async (data) => {
 		console.log(data);
+		const result = await createStudent(dispatch, token, data);
+		setOpenBDr(true);
+		if (result) {
+			handleClose();
+			fetchStudents(dispatch, token);
+		}
+	};
+	const { curriculums } = useSelector((state) => state.curriculums);
+	const { isLoading, error } = useSelector((state) => state.students);
+	const [openBDr, setOpenBDr] = useState();
+	const handleCloseBDr = () => {
+		setOpenBDr(false);
 	};
 	return (
 		<Dialog
@@ -49,12 +74,12 @@ const AddStudent = ({ open, setOpen }) => {
 										{...field}
 										name="apellido"
 										type="text"
-										placeholder="Apellido"
+										placeholder="Apellido*"
 										variant="outlined"
-										// error={String(error).includes("usuario")}
 										required
+										error={String(error).includes("apellido")}
 										helperText={
-											"" // String(error).includes("usuario") ? String(error) : ""
+											String(error).includes("apellido") ? String(error) : ""
 										}
 									/>
 								)}
@@ -67,12 +92,12 @@ const AddStudent = ({ open, setOpen }) => {
 										{...field}
 										name="nombre"
 										type="text"
-										placeholder="Nombre"
-										variant="outlined"
-										// error={String(error).includes("usuario")}
 										required
+										placeholder="Nombre*"
+										variant="outlined"
+										error={String(error).includes("nombre")}
 										helperText={
-											"" // String(error).includes("usuario") ? String(error) : ""
+											String(error).includes("nombre") ? String(error) : ""
 										}
 									/>
 								)}
@@ -85,12 +110,13 @@ const AddStudent = ({ open, setOpen }) => {
 										{...field}
 										name="dni"
 										type="number"
-										placeholder="DNI"
-										variant="outlined"
-										// error={String(error).includes("usuario")}
+										min={1000000}
 										required
+										placeholder="DNI*"
+										variant="outlined"
+										error={String(error).includes("dni")}
 										helperText={
-											"" // String(error).includes("usuario") ? String(error) : ""
+											String(error).includes("dni") ? String(error) : ""
 										}
 									/>
 								)}
@@ -108,10 +134,11 @@ const AddStudent = ({ open, setOpen }) => {
 										{...field}
 										name="mail"
 										type="email"
-										placeholder="Mail"
+										required
+										placeholder="Mail*"
 										variant="outlined"
 										// error={String(error).includes("usuario")}
-										required
+
 										helperText={
 											"" // String(error).includes("usuario") ? String(error) : ""
 										}
@@ -129,7 +156,6 @@ const AddStudent = ({ open, setOpen }) => {
 										placeholder="Celular"
 										variant="outlined"
 										// error={String(error).includes("usuario")}
-										required
 										helperText={
 											"" // String(error).includes("usuario") ? String(error) : ""
 										}
@@ -147,7 +173,7 @@ const AddStudent = ({ open, setOpen }) => {
 										placeholder="Localidad"
 										variant="outlined"
 										// error={String(error).includes("usuario")}
-										required
+
 										helperText={
 											"" // String(error).includes("usuario") ? String(error) : ""
 										}
@@ -155,48 +181,30 @@ const AddStudent = ({ open, setOpen }) => {
 								)}
 							/>
 						</Box>
-						<Box
-							display={"flex"}
-							gap={1}
-							sx={{ flexDirection: { xs: "column", sm: "row" } }}>
-							<Controller
-								name="carrera"
-								control={control}
-								render={({ field }) => (
-									<TextField
+						<Controller
+							name="plan"
+							control={control}
+							render={({ field }) => (
+								<FormControl fullWidth>
+									<InputLabel id="plan">Plan</InputLabel>
+									<Select
 										{...field}
-										name="carrera"
-										type="text"
-										placeholder="Carrera (tiene que ser un select)"
-										variant="outlined"
-										// error={String(error).includes("usuario")}
-										required
-										helperText={
-											"" // String(error).includes("usuario") ? String(error) : ""
-										}
-										sx={{ flexGrow: 1 }}
-									/>
-								)}
-							/>
-							<Controller
-								name="plan"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										{...field}
+										labelId="plan"
 										name="plan"
 										type="text"
-										placeholder="Plan"
-										variant="outlined"
-										// error={String(error).includes("usuario")}
-										required
-										helperText={
-											"" // String(error).includes("usuario") ? String(error) : ""
-										}
-									/>
-								)}
-							/>
-						</Box>
+										label="Plan*"
+										variant="outlined">
+										{curriculums?.map((curriculum) => (
+											<MenuItem
+												key={curriculum._id}
+												value={
+													curriculum._id
+												}>{`${curriculum.año} - ${curriculum.carrera.nombre}`}</MenuItem>
+										))}
+									</Select>
+								</FormControl>
+							)}
+						/>
 						<Controller
 							name="cursando"
 							control={control}
@@ -210,11 +218,9 @@ const AddStudent = ({ open, setOpen }) => {
 										name="cursando"
 										id="cursando"
 										type="checkbox"
-										// error={String(error).includes("usuario")}
-										required
 									/>
 									<FormLabel htmlFor="cursando">
-										Cursa este cuatrimestre?
+										Cursa este cuatrimestre
 									</FormLabel>
 								</Box>
 							)}
@@ -232,10 +238,8 @@ const AddStudent = ({ open, setOpen }) => {
 										name="trabaja"
 										id="trabaja"
 										type="checkbox"
-										// error={String(error).includes("usuario")}
-										required
 									/>
-									<FormLabel htmlFor="trabaja">Trabaja?</FormLabel>
+									<FormLabel htmlFor="trabaja">Trabaja</FormLabel>
 								</Box>
 							)}
 						/>
@@ -252,11 +256,9 @@ const AddStudent = ({ open, setOpen }) => {
 										name="relCarrera"
 										id="relCarrera"
 										type="checkbox"
-										// error={String(error).includes("usuario")}
-										required
 									/>
 									<FormLabel htmlFor="relCarrera">
-										El trabajo está relacionado con la carrera?
+										El trabajo está relacionado con la carrera
 									</FormLabel>
 								</Box>
 							)}
@@ -271,11 +273,6 @@ const AddStudent = ({ open, setOpen }) => {
 									type="text"
 									placeholder="Horarios de trabajo"
 									variant="outlined"
-									// error={String(error).includes("usuario")}
-									required
-									helperText={
-										"" // String(error).includes("usuario") ? String(error) : ""
-									}
 								/>
 							)}
 						/>
@@ -289,11 +286,6 @@ const AddStudent = ({ open, setOpen }) => {
 									type="text"
 									placeholder="Descripcion del trabajo"
 									variant="outlined"
-									// error={String(error).includes("usuario")}
-									required
-									helperText={
-										"" // String(error).includes("usuario") ? String(error) : ""
-									}
 									multiline
 									minRows={3}
 								/>
@@ -306,13 +298,28 @@ const AddStudent = ({ open, setOpen }) => {
 								type="submit"
 								variant="contained"
 								color="primary">
-								Agregar
+								{isLoading ? <CircularProgress size={24} /> : "Ingresar"}
 							</Button>
 						</DialogActions>
 						{/* {error && <Typography>{error.toString()}</Typography>} */}
 					</FormControl>
 				</form>
 			</DialogContent>
+			<Backdrop
+				open={openBDr}
+				onClick={handleCloseBDr}>
+				<Paper>
+					<Typography color={error ? "error" : "white"}>
+						{isLoading ? (
+							<CircularProgress />
+						) : error ? (
+							error
+						) : (
+							"Estudiante agregado correctamente"
+						)}
+					</Typography>
+				</Paper>
+			</Backdrop>
 		</Dialog>
 	);
 };

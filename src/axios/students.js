@@ -11,3 +11,18 @@ export const fetchStudents = async (dispatch, token) => {
     dispatch(errorStudents(error.response?.data?.msg));
   }
 }
+export const createStudent = async (dispatch, token, data) => {
+  dispatch(loadingStudents());
+  try {
+    await axios({
+      method: "post",
+      url: "https://si-se-pc-back.vercel.app/estudiantes",
+      data: { ...data },
+      headers: { 'x-token': token }
+    });
+    return true;
+  } catch (error) {
+    dispatch(errorStudents(error.response?.data?.msg));
+    return false;
+  }
+}

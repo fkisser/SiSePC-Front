@@ -23,7 +23,6 @@ const VISIBLE_FIELDS = [
 const Students = () => {
 	const navigate = useNavigate();
 	const handleClick = (params) => {
-		console.log(params);
 		navigate(`/estudiantes/dni/${params.row.dni}`);
 	};
 	const dispatch = useDispatch();
@@ -45,7 +44,6 @@ const Students = () => {
 			cursando,
 		};
 	});
-	console.log(visibleStudents);
 
 	return (
 		<Box
@@ -62,12 +60,14 @@ const Students = () => {
 				}}>
 				<Typography
 					color="primary"
-					variant="h4">
+					variant="h4"
+					sx={{ fontSize: { xs: 20, sm: 36 } }}>
 					Estudiantes inscriptos
 				</Typography>
 				<Button
 					variant="contained"
 					startIcon={<Add />}
+					disabled={isLoading}
 					onClick={() => {
 						setOpen(true);
 					}}>
@@ -79,11 +79,11 @@ const Students = () => {
 					display={"grid"}
 					justifyContent={"center"}
 					alignItems={"center"}
-					height={"80vh"}>
+					height={"75vh"}>
 					<CircularProgress size={100} />
 				</Box>
 			) : (
-				<Box sx={{ height: "80vh" }}>
+				<Box sx={{ height: "75vh" }}>
 					<DataGrid
 						rows={visibleStudents}
 						row

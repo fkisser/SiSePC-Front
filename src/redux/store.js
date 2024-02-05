@@ -5,17 +5,19 @@ import storage from "redux-persist/lib/storage";
 import userReducer from "./user/userSlice";
 import confirmReducer from "./confirm/confirmSlice";
 import studentsReducer from "./students/studentsSlice";
+import curriculumsReducer from "./curriculums/curriculumsSlice";
 
 const reducers = combineReducers({
   user: userReducer,
   confirm: confirmReducer,
-  students: studentsReducer
+  students: studentsReducer,
+  curriculums: curriculumsReducer
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["user"]
+  whitelist: ["user", "curriculums"]
 }
 
 const persistedReducer = persistReducer(persistConfig, reducers)

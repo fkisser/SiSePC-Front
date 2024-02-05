@@ -1,7 +1,14 @@
 import { Container } from "@mui/material";
 import HomeCard from "../cards/HomeCard";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { fetchCareers } from "../../axios/careers";
 
 const Home = ({ navLinks }) => {
+	const dispatch = useDispatch();
+	useEffect(() => {
+		fetchCareers(dispatch);
+	}, [dispatch]);
 	return (
 		<Container
 			sx={{
