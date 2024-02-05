@@ -24,7 +24,7 @@ const Students = () => {
 	const navigate = useNavigate();
 	const handleClick = (params) => {
 		console.log(params);
-		navigate(`/estudiantes/dni/:${params.dni}`);
+		navigate(`/estudiantes/dni/${params.row.dni}`);
 	};
 	const dispatch = useDispatch();
 	const { token } = useSelector((state) => state.user.currentUser);

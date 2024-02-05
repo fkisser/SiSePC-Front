@@ -63,7 +63,7 @@ export default function App() {
 							}
 						/>
 						<Route
-							path=":id"
+							path="/estudiantes/dni/:DNI"
 							element={<Student />}
 						/>
 					</Route>
