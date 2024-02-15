@@ -1,5 +1,3 @@
-// form dialog, ver validaciones y uso en login
-
 import {
 	Backdrop,
 	Box,
@@ -11,11 +9,11 @@ import {
 	DialogTitle,
 	FormControl,
 	FormLabel,
-	Input,
 	InputLabel,
 	MenuItem,
 	Paper,
 	Select,
+	Switch,
 	TextField,
 	Typography,
 } from "@mui/material";
@@ -24,15 +22,20 @@ import { studentInitialValues } from "./initialValues";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { studentValidationSchema } from "./validationSchema";
 import { useDispatch, useSelector } from "react-redux";
-import { createStudent, fetchStudents } from "../../axios/students";
+import {
+	createStudent,
+	fetchStudents,
+	updateStudent,
+} from "../../axios/students";
 import { useState } from "react";
 
-const AddStudent = ({ open, setOpen }) => {
+const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 	const handleClose = () => {
+		reset(values ? values : studentInitialValues);
 		setOpen(false);
 	};
-	const { control, handleSubmit } = useForm({
-		defaultValues: studentInitialValues,
+	const { control, handleSubmit, reset } = useForm({
+		defaultValues: values ? values : studentInitialValues,
 		resolver: yupResolver(studentValidationSchema),
 		reValidateMode: "onChange",
 	});
@@ -40,11 +43,18 @@ const AddStudent = ({ open, setOpen }) => {
 	const { token } = useSelector((state) => state.user.currentUser);
 	const onSubmit = async (data) => {
 		console.log(data);
-		const result = await createStudent(dispatch, token, data);
-		setOpenBDr(true);
-		if (result) {
-			handleClose();
+		let result = false;
+		if (values) {
+			result = await updateStudent(dispatch, token, data, id);
+			console.log(result);
+			//fetch solo al student modificado
+		} else {
+			result = await createStudent(dispatch, token, data);
 			fetchStudents(dispatch, token);
+		}
+		if (result) {
+			setOpenBDr(true);
+			handleClose();
 		}
 	};
 	const { curriculums } = useSelector((state) => state.curriculums);
@@ -57,111 +67,116 @@ const AddStudent = ({ open, setOpen }) => {
 		<Dialog
 			open={open}
 			onClose={handleClose}>
-			<DialogTitle>Agregar estudiante</DialogTitle>
+			<DialogTitle>
+				{values ? "Modificar información personal" : "Agregar estudiante"}
+			</DialogTitle>
 			<DialogContent>
 				<form onSubmit={handleSubmit(onSubmit)}>
-					<FormControl
-						sx={{ display: "grid", gap: 3, justifyContent: "center" }}>
+					<FormControl>
 						<Box
-							display={"flex"}
-							gap={1}
-							sx={{ flexDirection: { xs: "column", sm: "row" } }}>
-							<Controller
-								name="apellido"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										{...field}
-										name="apellido"
-										type="text"
-										placeholder="Apellido*"
-										variant="outlined"
-										required
-										error={String(error).includes("apellido")}
-										helperText={
-											String(error).includes("apellido") ? String(error) : ""
-										}
-									/>
-								)}
-							/>
-							<Controller
-								name="nombre"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										{...field}
-										name="nombre"
-										type="text"
-										required
-										placeholder="Nombre*"
-										variant="outlined"
-										error={String(error).includes("nombre")}
-										helperText={
-											String(error).includes("nombre") ? String(error) : ""
-										}
-									/>
-								)}
-							/>
-							<Controller
-								name="dni"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										{...field}
-										name="dni"
-										type="number"
-										min={1000000}
-										required
-										placeholder="DNI*"
-										variant="outlined"
-										error={String(error).includes("dni")}
-										helperText={
-											String(error).includes("dni") ? String(error) : ""
-										}
-									/>
-								)}
-							/>
-						</Box>
-						<Box
-							display={"flex"}
-							gap={1}
-							sx={{ flexDirection: { xs: "column", sm: "row" } }}>
-							<Controller
-								name="mail"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										{...field}
-										name="mail"
-										type="email"
-										required
-										placeholder="Mail*"
-										variant="outlined"
-										// error={String(error).includes("usuario")}
-
-										helperText={
-											"" // String(error).includes("usuario") ? String(error) : ""
-										}
-									/>
-								)}
-							/>
-							<Controller
-								name="celular"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										{...field}
-										name="celular"
-										type="text"
-										placeholder="Celular"
-										variant="outlined"
-										// error={String(error).includes("usuario")}
-										helperText={
-											"" // String(error).includes("usuario") ? String(error) : ""
-										}
-									/>
-								)}
-							/>
+							sx={{ display: "grid", gap: 3, justifyContent: "center", mt: 2 }}>
+							<Box
+								display={"flex"}
+								gap={1}
+								sx={{ flexDirection: { xs: "column", sm: "row" } }}>
+								<Controller
+									name="apellido"
+									control={control}
+									render={({ field }) => (
+										<TextField
+											{...field}
+											name="apellido"
+											type="text"
+											label="Apellido"
+											variant="outlined"
+											required
+											error={String(error).includes("apellido")}
+											helperText={
+												String(error).includes("apellido") ? String(error) : ""
+											}
+										/>
+									)}
+								/>
+								<Controller
+									name="nombre"
+									control={control}
+									render={({ field }) => (
+										<TextField
+											{...field}
+											name="nombre"
+											type="text"
+											required
+											label="Nombre"
+											variant="outlined"
+											error={String(error).includes("nombre")}
+											helperText={
+												String(error).includes("nombre") ? String(error) : ""
+											}
+										/>
+									)}
+								/>
+								<Controller
+									name="dni"
+									control={control}
+									render={({ field }) => (
+										<TextField
+											{...field}
+											name="dni"
+											type="number"
+											min={1000000}
+											required
+											label="DNI"
+											variant="outlined"
+											error={String(error).includes("DNI")}
+											helperText={
+												String(error).includes("DNI") ? String(error) : ""
+											}
+										/>
+									)}
+								/>
+							</Box>
+							<Box
+								display={"flex"}
+								gap={1}
+								sx={{ flexDirection: { xs: "column", sm: "row" } }}>
+								<Controller
+									name="mail"
+									control={control}
+									render={({ field }) => (
+										<TextField
+											fullWidth
+											{...field}
+											name="mail"
+											type="email"
+											required
+											label="Mail"
+											variant="outlined"
+											error={String(error).includes("mail")}
+											helperText={
+												String(error).includes("mail") ? String(error) : ""
+											}
+										/>
+									)}
+								/>
+								<Controller
+									name="celular"
+									control={control}
+									render={({ field }) => (
+										<TextField
+											{...field}
+											fullWidth
+											name="celular"
+											type="text"
+											label="Celular"
+											variant="outlined"
+											error={String(error).includes("celular")}
+											helperText={
+												String(error).includes("celular") ? String(error) : ""
+											}
+										/>
+									)}
+								/>
+							</Box>
 							<Controller
 								name="ciudad"
 								control={control}
@@ -170,150 +185,160 @@ const AddStudent = ({ open, setOpen }) => {
 										{...field}
 										name="ciudad"
 										type="text"
-										placeholder="Localidad"
+										label="Localidad"
 										variant="outlined"
-										// error={String(error).includes("usuario")}
-
+										error={String(error).includes("localidad")}
 										helperText={
-											"" // String(error).includes("usuario") ? String(error) : ""
+											String(error).includes("localidad") ? String(error) : ""
 										}
 									/>
 								)}
 							/>
-						</Box>
-						<Controller
-							name="plan"
-							control={control}
-							render={({ field }) => (
-								<FormControl fullWidth>
-									<InputLabel id="plan">Plan</InputLabel>
-									<Select
+							<Controller
+								name="plan"
+								control={control}
+								render={({ field }) => (
+									<Box position={"relative"}>
+										<InputLabel id="plan">Plan *</InputLabel>
+										<Select
+											fullWidth
+											{...field}
+											disabled={values ? true : false}
+											labelId="plan"
+											name="plan"
+											type="text"
+											required
+											label="Plan"
+											variant="outlined">
+											{curriculums?.map((curriculum) => (
+												<MenuItem
+													key={curriculum._id}
+													value={
+														curriculum._id
+													}>{`${curriculum.año} - ${curriculum.carrera.nombre}`}</MenuItem>
+											))}
+										</Select>
+									</Box>
+								)}
+							/>
+							<Controller
+								name="cursando"
+								control={control}
+								render={({ field }) => (
+									<Box
+										position={"relative"}
+										display={"flex"}
+										alignItems={"center"}
+										gap={1}>
+										<Switch
+											{...field}
+											checked={field.value}
+											name="cursando"
+											id="cursando"
+										/>
+										<FormLabel htmlFor="cursando">
+											Cursa este cuatrimestre
+										</FormLabel>
+									</Box>
+								)}
+							/>
+							<Controller
+								name="trabaja"
+								control={control}
+								render={({ field }) => (
+									<Box
+										display={"flex"}
+										alignItems={"center"}
+										gap={1}>
+										<Switch
+											{...field}
+											checked={field.value}
+											name="trabaja"
+											id="trabaja"
+										/>
+										<FormLabel htmlFor="trabaja">Trabaja</FormLabel>
+									</Box>
+								)}
+							/>
+							<Controller
+								name="relCarrera"
+								control={control}
+								render={({ field }) => (
+									<Box
+										display={"flex"}
+										alignItems={"center"}
+										gap={1}>
+										<Switch
+											{...field}
+											checked={field.value}
+											name="relCarrera"
+											id="relCarrera"
+										/>
+										<FormLabel htmlFor="relCarrera">
+											El trabajo está relacionado con la carrera
+										</FormLabel>
+									</Box>
+								)}
+							/>
+							<Controller
+								name="horarioTrabajo"
+								control={control}
+								render={({ field }) => (
+									<TextField
 										{...field}
-										labelId="plan"
-										name="plan"
+										name="horarioTrabajo"
 										type="text"
-										label="Plan*"
-										variant="outlined">
-										{curriculums?.map((curriculum) => (
-											<MenuItem
-												key={curriculum._id}
-												value={
-													curriculum._id
-												}>{`${curriculum.año} - ${curriculum.carrera.nombre}`}</MenuItem>
-										))}
-									</Select>
-								</FormControl>
-							)}
-						/>
-						<Controller
-							name="cursando"
-							control={control}
-							render={({ field }) => (
-								<Box
-									display={"flex"}
-									alignItems={"center"}
-									gap={1}>
-									<Input
-										{...field}
-										name="cursando"
-										id="cursando"
-										type="checkbox"
+										placeholder="Horarios de trabajo"
+										variant="outlined"
 									/>
-									<FormLabel htmlFor="cursando">
-										Cursa este cuatrimestre
-									</FormLabel>
-								</Box>
-							)}
-						/>
-						<Controller
-							name="trabaja"
-							control={control}
-							render={({ field }) => (
-								<Box
-									display={"flex"}
-									alignItems={"center"}
-									gap={1}>
-									<Input
+								)}
+							/>
+							<Controller
+								name="detallesTrabajo"
+								control={control}
+								render={({ field }) => (
+									<TextField
 										{...field}
-										name="trabaja"
-										id="trabaja"
-										type="checkbox"
+										name="detallesTrabajo"
+										type="text"
+										placeholder="Descripcion del trabajo"
+										variant="outlined"
+										multiline
+										minRows={3}
 									/>
-									<FormLabel htmlFor="trabaja">Trabaja</FormLabel>
-								</Box>
-							)}
-						/>
-						<Controller
-							name="relCarrera"
-							control={control}
-							render={({ field }) => (
-								<Box
-									display={"flex"}
-									alignItems={"center"}
-									gap={1}>
-									<Input
-										{...field}
-										name="relCarrera"
-										id="relCarrera"
-										type="checkbox"
-									/>
-									<FormLabel htmlFor="relCarrera">
-										El trabajo está relacionado con la carrera
-									</FormLabel>
-								</Box>
-							)}
-						/>
-						<Controller
-							name="horarioTrabajo"
-							control={control}
-							render={({ field }) => (
-								<TextField
-									{...field}
-									name="horarioTrabajo"
-									type="text"
-									placeholder="Horarios de trabajo"
-									variant="outlined"
-								/>
-							)}
-						/>
-						<Controller
-							name="detallesTrabajo"
-							control={control}
-							render={({ field }) => (
-								<TextField
-									{...field}
-									name="detallesTrabajo"
-									type="text"
-									placeholder="Descripcion del trabajo"
-									variant="outlined"
-									multiline
-									minRows={3}
-								/>
-							)}
-						/>
+								)}
+							/>
 
-						<DialogActions>
-							<Button onClick={handleClose}>Cancelar</Button>
-							<Button
-								type="submit"
-								variant="contained"
-								color="primary">
-								{isLoading ? <CircularProgress size={24} /> : "Ingresar"}
-							</Button>
-						</DialogActions>
-						{/* {error && <Typography>{error.toString()}</Typography>} */}
+							<DialogActions>
+								<Button onClick={handleClose}>Cancelar</Button>
+								<Button
+									type="submit"
+									variant="contained"
+									color="primary">
+									{isLoading ? (
+										<CircularProgress size={24} />
+									) : values ? (
+										"Modificar"
+									) : (
+										"Agregar"
+									)}
+								</Button>
+							</DialogActions>
+						</Box>
 					</FormControl>
 				</form>
 			</DialogContent>
 			<Backdrop
 				open={openBDr}
 				onClick={handleCloseBDr}>
-				<Paper>
-					<Typography color={error ? "error" : "white"}>
+				<Paper sx={{ p: 4 }}>
+					<Typography color={error ? "error" : "success"}>
 						{isLoading ? (
 							<CircularProgress />
 						) : error ? (
 							error
+						) : values ? (
+							"Estudiante modificado correctamente"
 						) : (
 							"Estudiante agregado correctamente"
 						)}

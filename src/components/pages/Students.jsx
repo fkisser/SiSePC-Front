@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Add } from "@mui/icons-material";
 import { fetchStudents } from "../../axios/students";
+import { successStudent } from "../../redux/students/studentSlice";
 
 const VISIBLE_FIELDS = [
 	{ field: "apellido", headerName: "Apellido", flex: 1 },
@@ -22,11 +23,15 @@ const VISIBLE_FIELDS = [
 
 const Students = () => {
 	const navigate = useNavigate();
-	const handleClick = (params) => {
-		navigate(`/estudiantes/dni/${params.row.dni}`);
-	};
 	const dispatch = useDispatch();
 	const { token } = useSelector((state) => state.user.currentUser);
+	const handleClick = async (params) => {
+		const student = students.find((_student) => {
+			return _student.dni === params.row.dni;
+		});
+		dispatch(successStudent(student));
+		navigate(`/estudiantes/dni/${params.row.dni}`);
+	};
 	const [open, setOpen] = useState(false);
 	useEffect(() => {
 		fetchStudents(dispatch, token);
