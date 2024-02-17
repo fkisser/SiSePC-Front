@@ -1,4 +1,4 @@
-import { ArrowBack, Check, Edit } from "@mui/icons-material";
+import { ArrowBack, Check, Edit, Save } from "@mui/icons-material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import {
 	AppBar,
@@ -19,6 +19,7 @@ import AddStudent from "../student/AddStudent";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { newDetallePlanStudent } from "../../redux/students/studentSlice";
 import { updateStudent } from "../../axios/students";
+import { Link } from "react-router-dom";
 
 const Student = () => {
 	const dispatch = useDispatch();
@@ -82,15 +83,28 @@ const Student = () => {
 			editable: true,
 			valueGetter: (params) => (params.value ? new Date(params.value) : ""),
 		},
-		{ field: "resolucion", headerName: "Resolución", editable: true },
 		{
-			field: "observaciones",
+			field: "acta",
+			headerName: "Resolución",
+			editable: true,
+			align: "center",
+			renderCell: (params) =>
+				params.value ? (
+					<Link
+						target="_blank"
+						to={`${params.value}`}>
+						Link
+					</Link>
+				) : null,
+		},
+		{
+			field: "detalle",
 			headerName: "Observaciones",
 			flex: 1,
 			editable: true,
 		},
 	];
-
+	const [isEdited, setIsEdited] = useState(false);
 	return (
 		<>
 			<AppBar
@@ -379,6 +393,21 @@ const Student = () => {
 							height: "100%",
 							alignItems: "flex-end",
 						}}>
+						<Button
+							startIcon={<Save />}
+							variant="contained"
+							disabled={!isEdited}
+							onClick={async () => {
+								await updateStudent(
+									dispatch,
+									token,
+									{ detallePlan: detallePlan },
+									_id
+								);
+								setIsEdited(false);
+							}}>
+							Guardar cambios
+						</Button>
 						<DataGrid
 							rows={detallePlan}
 							editMode="row"
@@ -399,20 +428,25 @@ const Student = () => {
 									showQuickFilter: true,
 								},
 							}}
-							processRowUpdate={async (newRow) => {
-								const newDetallePlan = detallePlan.map((subject) => {
-									if (newRow._id === subject._id) return newRow;
-									else return subject;
-								});
-								dispatch(newDetallePlanStudent(newDetallePlan));
-								await updateStudent(
-									dispatch,
-									token,
-									{ detallePlan: newDetallePlan },
-									_id
-								);
+							processRowUpdate={async (newRow, oldRow) => {
+								if (
+									newRow.asignaturaActual !== oldRow.asignaturaActual ||
+									newRow.condicion !== oldRow.condicion ||
+									newRow.fecha !== oldRow.fecha ||
+									newRow.acta !== oldRow.acta ||
+									newRow.detalle !== oldRow.detalle
+								) {
+									const newDetallePlan = detallePlan.map((subject) => {
+										if (newRow._id === subject._id) return newRow;
+										else return subject;
+									});
+									dispatch(newDetallePlanStudent(newDetallePlan));
+									setIsEdited(true);
+									return newRow;
+								}
+								return oldRow;
 							}}
-							hideFooter={true}
+							autoHeight={true}
 							sx={{ display: "flex", width: "100%" }}
 						/>
 					</Box>
