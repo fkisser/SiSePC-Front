@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import AddStudent from "../student/AddStudent";
@@ -35,6 +35,7 @@ const Students = () => {
 	const [open, setOpen] = useState(false);
 	useEffect(() => {
 		fetchStudents(dispatch, token);
+		dispatch(successStudent(null));
 	}, [dispatch, token]);
 	const { students, isLoading } = useSelector((state) => state.students);
 	const visibleStudents = students.map((student) => {
@@ -79,31 +80,23 @@ const Students = () => {
 					Agregar
 				</Button>
 			</Box>
-			{isLoading ? (
-				<Box
-					display={"grid"}
-					justifyContent={"center"}
-					alignItems={"center"}
-					height={"75vh"}>
-					<CircularProgress size={100} />
-				</Box>
-			) : (
-				<Box sx={{ height: "75vh" }}>
-					<DataGrid
-						rows={visibleStudents}
-						row
-						columns={VISIBLE_FIELDS}
-						slots={{ toolbar: GridToolbar }}
-						slotProps={{
-							toolbar: {
-								showQuickFilter: true,
-							},
-						}}
-						autoPageSize={true}
-						onRowClick={handleClick}
-					/>
-				</Box>
-			)}
+
+			<Box sx={{ height: "80vh" }}>
+				<DataGrid
+					rows={visibleStudents}
+					columns={VISIBLE_FIELDS}
+					slots={{ toolbar: GridToolbar }}
+					loading={isLoading}
+					slotProps={{
+						toolbar: {
+							showQuickFilter: true,
+						},
+					}}
+					autoPageSize={true}
+					onRowClick={handleClick}
+				/>
+			</Box>
+
 			<AddStudent
 				open={open}
 				setOpen={setOpen}

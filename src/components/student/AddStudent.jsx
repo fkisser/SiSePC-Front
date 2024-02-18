@@ -42,23 +42,19 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 	const dispatch = useDispatch();
 	const { token } = useSelector((state) => state.user.currentUser);
 	const onSubmit = async (data) => {
-		console.log(data);
 		let result = false;
 		if (values) {
 			result = await updateStudent(dispatch, token, data, id);
-			console.log(result);
 			//fetch solo al student modificado
 		} else {
 			result = await createStudent(dispatch, token, data);
 			fetchStudents(dispatch, token);
 		}
-		if (result) {
-			setOpenBDr(true);
-			handleClose();
-		}
+		setOpenBDr(true);
+		if (result) handleClose();
 	};
 	const { curriculums } = useSelector((state) => state.curriculums);
-	const { isLoading, error } = useSelector((state) => state.students);
+	const { isLoading, error } = useSelector((state) => state.student);
 	const [openBDr, setOpenBDr] = useState();
 	const handleCloseBDr = () => {
 		setOpenBDr(false);

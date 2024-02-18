@@ -1,6 +1,5 @@
-import HomeIcon from "@mui/icons-material/Home";
 import Navbar from "./components/navbar/Navbar";
-import { Container } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import Home from "./components/pages/Home";
 import Login from "./components/pages/Login";
@@ -10,12 +9,13 @@ import Curriculums from "./components/pages/Curriculums";
 import Regulations from "./components/pages/Regulations";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import Student from "./components/pages/Student";
+import Actions from "./components/pages/Actions";
 
 const navLinks = [
 	{
 		title: "Principal",
 		path: "/",
-		icon: <HomeIcon sx={{ fontSize: "30px" }} />,
+		icon: "home",
 	},
 	{
 		title: "Estudiantes",
@@ -37,13 +37,18 @@ const navLinks = [
 		path: "/resoluciones",
 		icon: "description",
 	},
+	{
+		title: "Acciones generales",
+		path: "/acciones",
+		icon: "checklist",
+	},
 ];
 
 export default function App() {
 	return (
-		<>
+		<Grid alignContent={"center"}>
 			<Navbar navLinks={navLinks} />
-			<Container sx={{ display: "grid", gap: 1, mt: 2 }}>
+			<Container sx={{ display: "grid", gap: 1, my: 2, mx: "auto", p: 0 }}>
 				<Routes>
 					<Route
 						path="/"
@@ -64,7 +69,11 @@ export default function App() {
 						/>
 						<Route
 							path="/estudiantes/dni/:DNI"
-							element={<Student />}
+							element={
+								<ProtectedRoute redirectTo={"/login"}>
+									<Student />
+								</ProtectedRoute>
+							}
 						/>
 					</Route>
 					<Route
@@ -92,11 +101,19 @@ export default function App() {
 						}
 					/>
 					<Route
+						path="/acciones"
+						element={
+							<ProtectedRoute redirectTo={"/login"}>
+								<Actions />
+							</ProtectedRoute>
+						}
+					/>
+					<Route
 						path="/login"
 						element={<Login />}
 					/>
 				</Routes>
 			</Container>
-		</>
+		</Grid>
 	);
 }

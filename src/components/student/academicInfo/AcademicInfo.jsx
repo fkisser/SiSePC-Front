@@ -1,18 +1,17 @@
-import { TabPanel } from "@mui/lab";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { updateStudent } from "../../../axios/students";
-import { Save } from "@mui/icons-material";
+import { FileOpen, Save } from "@mui/icons-material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { newDetallePlanStudent } from "../../../redux/students/studentSlice";
 
-const AcademicInfo = ({ tabPanelValue }) => {
+const AcademicInfo = () => {
 	const { _id, plan, ultimaAprobada, ultimaReinscripcion, detallePlan } =
 		useSelector((state) => state.student.currentStudent);
 	const { token } = useSelector((state) => state.user.currentUser);
 	const { isLoading } = useSelector((state) => state.student);
+
 	const VISIBLE_FIELDS = [
 		{
 			field: "asignaturaOriginal",
@@ -53,11 +52,11 @@ const AcademicInfo = ({ tabPanelValue }) => {
 			align: "center",
 			renderCell: (params) =>
 				params.value ? (
-					<Link
-						target="_blank"
-						to={`${params.value}`}>
-						Link
-					</Link>
+					<IconButton
+						href={params.value}
+						target="_blank">
+						<FileOpen />
+					</IconButton>
 				) : null,
 		},
 		{
@@ -70,9 +69,10 @@ const AcademicInfo = ({ tabPanelValue }) => {
 	const [isEdited, setIsEdited] = useState(false);
 	const dispatch = useDispatch();
 	return (
-		<TabPanel
-			value={tabPanelValue}
-			sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+		<Box
+			display={"flex"}
+			flexDirection={"column"}
+			gap={2}>
 			<Box
 				display={"flex"}
 				flexDirection={"column"}
@@ -220,7 +220,7 @@ const AcademicInfo = ({ tabPanelValue }) => {
 					sx={{ display: "flex", width: "100%" }}
 				/>
 			</Box>
-		</TabPanel>
+		</Box>
 	);
 };
 

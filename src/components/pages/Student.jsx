@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import PersonalInfo from "../student/personalInfo/PersonalInfo";
 import AcademicInfo from "../student/academicInfo/AcademicInfo";
+import Actions from "../actions/Actions";
 
 const Student = () => {
 	const { apellido, nombre, dni, plan } = useSelector(
@@ -70,9 +71,15 @@ const Student = () => {
 						sx={{ display: "flex" }}
 					/>
 				</TabList>
-				<PersonalInfo tabPanelValue="1" />
-				<AcademicInfo tabPanelValue="2" />
-				<TabPanel value="3">Item Three</TabPanel>
+				<TabPanel value="1">
+					<PersonalInfo />
+				</TabPanel>
+				<TabPanel value="2">
+					<AcademicInfo />
+				</TabPanel>
+				<TabPanel value="3">
+					<Actions student={true} />
+				</TabPanel>
 			</TabContext>
 		</>
 	);

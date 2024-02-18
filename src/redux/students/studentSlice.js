@@ -30,6 +30,12 @@ const studentSlice = createSlice({
         currentStudent: { ...state.currentStudent, detallePlan: action.payload },
       }
     }),
+    newActionsStudent: ((state, action) => {
+      return {
+        ...state,
+        currentStudent: { ...state.currentStudent, acciones: [...action.payload] },
+      }
+    }),
     errorStudent: ((state, action) => {
       return {
         ...state,
@@ -40,6 +46,6 @@ const studentSlice = createSlice({
   },
 });
 
-export const { loadingStudent, successStudent, errorStudent, newDetallePlanStudent } = studentSlice.actions;
+export const { loadingStudent, successStudent, errorStudent, newDetallePlanStudent, newActionsStudent } = studentSlice.actions;
 
 export default studentSlice.reducer;

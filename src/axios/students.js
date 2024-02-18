@@ -38,8 +38,15 @@ export const createStudent = async (dispatch, token, data) => {
       headers: { 'x-token': token }
     });
     const { estudiante } = response.data;
-    dispatch(successStudent(estudiante));
-    return true;
+    if (response.status === 200) {
+      dispatch(successStudent(estudiante));
+      return true;
+    }
+    else {
+      dispatch(errorStudents(response?.data?.msg));
+      return false;
+    }
+
   } catch (error) {
     dispatch(errorStudents(error.response?.data?.msg));
     return false;
@@ -55,10 +62,16 @@ export const updateStudent = async (dispatch, token, data, id) => {
       headers: { 'x-token': token }
     });
     const { estudiante } = response.data;
-    dispatch(successStudent(estudiante));
-    return true;
+    if (response.status === 200) {
+      dispatch(successStudent(estudiante));
+      return true;
+    }
+    else {
+      dispatch(errorStudent(response.data.msg));
+      return false;
+    }
   } catch (error) {
-    dispatch(errorStudent(error));
+    dispatch(errorStudent(error.response?.data?.msg));
     return false;
   }
 }
