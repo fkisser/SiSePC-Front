@@ -329,15 +329,11 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 				onClick={handleCloseBDr}>
 				<Paper sx={{ p: 4 }}>
 					<Typography color={error ? "error" : "success"}>
-						{isLoading ? (
-							<CircularProgress />
-						) : error ? (
-							error
-						) : values ? (
-							"Estudiante modificado correctamente"
-						) : (
-							"Estudiante agregado correctamente"
-						)}
+						{error
+							? error
+							: values
+							? "Estudiante modificado correctamente"
+							: "Estudiante agregado correctamente"}
 					</Typography>
 				</Paper>
 			</Backdrop>

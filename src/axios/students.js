@@ -24,7 +24,7 @@ export const getStudentByDNI = async (dispatch, token, dni) => {
     dispatch(successStudent(estudiante));
     return true;
   } catch (error) {
-    dispatch(errorStudents(error.response?.data?.msg));
+    dispatch(errorStudent(error.response?.data?.msg));
     return false;
   }
 }
@@ -43,12 +43,12 @@ export const createStudent = async (dispatch, token, data) => {
       return true;
     }
     else {
-      dispatch(errorStudents(response?.data?.msg));
+      dispatch(errorStudent(response?.data?.msg));
       return false;
     }
 
   } catch (error) {
-    dispatch(errorStudents(error.response?.data?.msg));
+    dispatch(errorStudent(error.response?.data?.msg));
     return false;
   }
 }

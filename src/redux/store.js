@@ -8,6 +8,7 @@ import studentsReducer from "./students/studentsSlice";
 import studentReducer from "./students/studentSlice";
 import curriculumsReducer from "./curriculums/curriculumsSlice";
 import tutoresReducer from "./tutores/tutoresSlice";
+import actionsReducer from "./actions/actionsSlice";
 
 const reducers = combineReducers({
   user: userReducer,
@@ -16,12 +17,13 @@ const reducers = combineReducers({
   student: studentReducer,
   curriculums: curriculumsReducer,
   tutores: tutoresReducer,
+  actions: actionsReducer,
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["user", "curriculums", "students", "student", "tutores"]
+  whitelist: ["user", "curriculums", "students", "student", "tutores", "actions"]
 }
 
 const persistedReducer = persistReducer(persistConfig, reducers)

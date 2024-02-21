@@ -23,6 +23,8 @@ import { useState } from "react";
 import { actionInitialValues } from "./initialValues";
 import { actionValidationSchema } from "./validationSchema";
 import { newActionsStudent } from "../../redux/students/studentSlice";
+import { successActions } from "../../redux/actions/actionsSlice";
+import { createGAction } from "../../axios/actions";
 
 const AddAction = ({ open, setOpen, student = false, course = false }) => {
 	const handleClose = () => {
@@ -38,10 +40,15 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 	const { token, isAdmin, _id, nombre, apellido } = useSelector(
 		(state) => state.user.currentUser
 	);
-	const { acciones, _id: studentId } = useSelector(
+	const { acciones: accionesE, _id: studentId } = useSelector(
 		(state) => state.student.currentStudent
 	);
-	const { isLoading, error } = useSelector((state) => state.student);
+	const { actions: accionesG, isLoading: isLoadingG } = useSelector(
+		(state) => state.actions
+	);
+	const { isLoading: isLoadingE, error } = useSelector(
+		(state) => state.student
+	);
 	const { tutores } = useSelector((state) => state.tutores);
 	let _tutores;
 	if (isAdmin) {
@@ -50,9 +57,9 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 		});
 	}
 	const onSubmit = async (data) => {
+		data.id = Date.now();
 		if (student) {
-			data.id = Date.now();
-			const newActions = [data, ...acciones];
+			const newActions = [data, ...accionesE];
 			dispatch(newActionsStudent(newActions));
 			await updateStudent(dispatch, token, { acciones: newActions }, studentId);
 		} else if (course) {
@@ -61,7 +68,10 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 			// dispatch(newActionsCourse?(newActions))
 			// result = await updateCourse(dispatch, token, data, id);
 		} else {
-			console.log("Acciones generales");
+			console.log(data);
+			const newActions = [data, ...accionesG];
+			dispatch(successActions(newActions));
+			await createGAction(dispatch, token, data);
 		}
 		setOpenBDr(true);
 	};
@@ -237,7 +247,11 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 									type="submit"
 									variant="contained"
 									color="primary">
-									{isLoading ? <CircularProgress size={24} /> : "Agregar"}
+									{isLoadingE || isLoadingG ? (
+										<CircularProgress size={24} />
+									) : (
+										"Agregar"
+									)}
 								</Button>
 							</DialogActions>
 						</Box>
@@ -249,7 +263,7 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 				onClick={handleCloseBDr}>
 				<Paper sx={{ p: 4 }}>
 					<Typography color={error ? "error" : "success"}>
-						{isLoading ? (
+						{isLoadingE || isLoadingG ? (
 							<CircularProgress />
 						) : error ? (
 							error

@@ -18,6 +18,11 @@ const navLinks = [
 		icon: "home",
 	},
 	{
+		title: "Acciones generales",
+		path: "/acciones",
+		icon: "checklist",
+	},
+	{
 		title: "Estudiantes",
 		path: "/estudiantes",
 		icon: "group",
@@ -36,11 +41,6 @@ const navLinks = [
 		title: "Resoluciones y Reglamentos",
 		path: "/resoluciones",
 		icon: "description",
-	},
-	{
-		title: "Acciones generales",
-		path: "/acciones",
-		icon: "checklist",
 	},
 ];
 

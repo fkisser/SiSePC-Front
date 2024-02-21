@@ -1,17 +1,19 @@
 import { Add, FileOpen, Save } from "@mui/icons-material";
-import { Box, Button, IconButton } from "@mui/material";
+import { Box, Button, CircularProgress, IconButton } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStudent } from "../../axios/students";
 import AddAction from "./AddAction";
 import { newActionsStudent } from "../../redux/students/studentSlice";
+import { successActions } from "../../redux/actions/actionsSlice";
+import { updateAction } from "../../axios/actions";
 
 const Actions = ({ student = false, course = false }) => {
 	const { acciones: accionesE, _id: id } = useSelector(
 		(state) => state.student.currentStudent
 	);
-	const { isLoading } = useSelector((state) => state.student);
+	const { isLoading: isLoadingE } = useSelector((state) => state.student);
 	const { isAdmin, _id, apellido, nombre, token } = useSelector(
 		(state) => state.user.currentUser
 	);
@@ -23,19 +25,19 @@ const Actions = ({ student = false, course = false }) => {
 		});
 	}
 	// const { acciones: accionesC } = useSelector((state) => state.course.currentCourse);
-	// const { acciones: accionesG } = useSelector(
-	// 	(state) => state.actions
-	// );
+	const { actions, isLoading: isLoadingG } = useSelector(
+		(state) => state.actions
+	);
 	const [visibleActions, setVisibleActions] = useState([]);
 	useEffect(() => {
 		if (student) {
 			setVisibleActions(accionesE);
 		} else if (course) {
-			// 	// setVisibleActions(accionesC);
+			// setVisibleActions(accionesC);
 		} else {
-			// 	// setVisibleActions(accionesG);
+			setVisibleActions(actions);
 		}
-	}, [accionesE, course, student]);
+	}, [accionesE, course, student, actions]);
 
 	const VISIBLE_FIELDS = [
 		{
@@ -46,7 +48,9 @@ const Actions = ({ student = false, course = false }) => {
 			align: "right",
 			valueGetter: (params) => (params.value ? new Date(params.value) : ""),
 			renderCell: (params) =>
-				`${params.value.getUTCDate()}/${params.value.getUTCMonth()}/${params.value.getUTCFullYear()}`,
+				`${params.value.getUTCDate()}/${
+					params.value.getUTCMonth() + 1
+				}/${params.value.getUTCFullYear()}`,
 		},
 		{
 			field: "descripcion",
@@ -107,7 +111,7 @@ const Actions = ({ student = false, course = false }) => {
 			sx={{
 				display: "flex",
 				flexDirection: "column",
-				minHeight: "65vh",
+				minHeight: student || course ? "65vh" : "89vh",
 				height: "100%",
 				alignItems: "flex-end",
 			}}>
@@ -118,10 +122,9 @@ const Actions = ({ student = false, course = false }) => {
 				<Button
 					startIcon={<Add />}
 					variant="contained"
-					disabled={isLoading}
+					disabled={isLoadingE || isLoadingG}
 					onClick={async () => {
 						setOpen(true);
-						setIsEdited(true);
 					}}>
 					Agregar registro
 				</Button>
@@ -129,13 +132,18 @@ const Actions = ({ student = false, course = false }) => {
 					startIcon={<Save />}
 					variant="contained"
 					disabled={!isEdited}
+					sx={{ display: student || course ? "flex" : "none" }}
 					onClick={async () => {
 						if (student) {
 							await updateStudent(dispatch, token, { acciones: accionesE }, id);
 						}
 						setIsEdited(false);
 					}}>
-					Guardar cambios
+					{isLoadingE || isLoadingG ? (
+						<CircularProgress size={24} />
+					) : (
+						"Guardar cambios"
+					)}
 				</Button>
 			</Box>
 			<DataGrid
@@ -144,8 +152,7 @@ const Actions = ({ student = false, course = false }) => {
 				density="compact"
 				columns={VISIBLE_FIELDS}
 				slots={{ toolbar: GridToolbar }}
-				loading={isLoading}
-				// getRowId={(row) => row.id}
+				loading={isLoadingE || isLoadingG}
 				slotProps={{
 					toolbar: {
 						showQuickFilter: true,
@@ -164,7 +171,12 @@ const Actions = ({ student = false, course = false }) => {
 							if (newRow.id === action.id) return newRow;
 							else return action;
 						});
-						dispatch(newActionsStudent(newVisibleActions));
+						if (student) dispatch(newActionsStudent(newVisibleActions));
+						// else if (course) dispatch(newActionsStudent(newVisibleActions));
+						else {
+							dispatch(successActions(newVisibleActions));
+							await updateAction(dispatch, token, newRow, newRow._id);
+						}
 						setVisibleActions(newVisibleActions);
 						setIsEdited(true);
 						return newRow;
@@ -176,7 +188,8 @@ const Actions = ({ student = false, course = false }) => {
 			<AddAction
 				open={open}
 				setOpen={setOpen}
-				student={true}
+				student={student}
+				course={course}
 			/>
 		</Box>
 	);
