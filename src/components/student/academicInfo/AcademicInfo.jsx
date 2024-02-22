@@ -1,4 +1,12 @@
-import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	FormLabel,
+	IconButton,
+	Switch,
+	TextField,
+	Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStudent } from "../../../axios/students";
@@ -7,8 +15,14 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { newDetallePlanStudent } from "../../../redux/students/studentSlice";
 
 const AcademicInfo = () => {
-	const { _id, plan, ultimaAprobada, ultimaReinscripcion, detallePlan } =
-		useSelector((state) => state.student.currentStudent);
+	const {
+		_id,
+		plan,
+		ultimaAprobada,
+		ultimaReinscripcion,
+		esRegular,
+		detallePlan,
+	} = useSelector((state) => state.student.currentStudent);
 	const { token } = useSelector((state) => state.user.currentUser);
 	const { isLoading } = useSelector((state) => state.student);
 
@@ -28,6 +42,8 @@ const AcademicInfo = () => {
 			field: "condicion",
 			headerName: "Condición",
 			editable: true,
+			headerAlign: "center",
+			align: "center",
 			type: "singleSelect",
 			valueOptions: [
 				"Aprobada",
@@ -43,12 +59,15 @@ const AcademicInfo = () => {
 			headerName: "Fecha",
 			type: "date",
 			editable: true,
+			headerAlign: "center",
+			align: "center",
 			valueGetter: (params) => (params.value ? new Date(params.value) : ""),
 		},
 		{
 			field: "acta",
 			headerName: "Resolución",
 			editable: true,
+			headerAlign: "center",
 			align: "center",
 			renderCell: (params) =>
 				params.value ? (
@@ -127,31 +146,67 @@ const AcademicInfo = () => {
 								);
 						}}
 					/>
-					{
-						<TextField
-							fullWidth
-							size="small"
-							label={`Fecha de última materia aprobada: ${
-								ultimaAprobada
-									?.toString()
-									.slice(0, 10)
-									.split("-")
-									.reverse()
-									.join("-") || "No especificado"
-							}`}
-							InputLabelProps={{ shrink: true }}
-							type="date"
-							onBlur={async (e) => {
-								if (e.target.value)
-									await updateStudent(
-										dispatch,
-										token,
-										{ ultimaAprobada: e.target.value },
-										_id
-									);
-							}}
-						/>
-					}
+					<TextField
+						fullWidth
+						size="small"
+						label={`Fecha de última materia aprobada: ${
+							ultimaAprobada
+								?.toString()
+								.slice(0, 10)
+								.split("-")
+								.reverse()
+								.join("-") || "No especificado"
+						}`}
+						InputLabelProps={{ shrink: true }}
+						type="date"
+						onBlur={async (e) => {
+							if (e.target.value)
+								await updateStudent(
+									dispatch,
+									token,
+									{ ultimaAprobada: e.target.value },
+									_id
+								);
+						}}
+					/>
+					<Box
+						display={"flex"}
+						justifyContent={"center"}
+						width={"20vw"}
+						border={"1px solid rgba(125, 125, 125, 0.50)"}
+						borderRadius={1}
+						position={"relative"}>
+						<FormLabel
+							sx={{
+								position: "absolute",
+								top: -10,
+								left: 10,
+								fontSize: 13,
+								backgroundColor: "white",
+							}}>
+							Alumno Regular:
+						</FormLabel>
+						<Box
+							display={"flex"}
+							alignItems={"center"}>
+							<FormLabel htmlFor="regular">No</FormLabel>
+							<Switch
+								size="medium"
+								label={`Alumno regular: ${esRegular}`}
+								id="regular"
+								onChange={async (e) => {
+									if (e.target.value)
+										await updateStudent(
+											dispatch,
+											token,
+											{ esRegular: e.target.value },
+											_id
+										);
+								}}
+							/>
+							<FormLabel htmlFor="regular">Si</FormLabel>
+						</Box>
+					</Box>
 				</Box>
 			</Box>
 			<Box
@@ -162,6 +217,22 @@ const AcademicInfo = () => {
 					minHeight: "65vh",
 					height: "100%",
 					alignItems: "flex-end",
+					"& .aprobada": {
+						backgroundColor: "rgba(0, 107, 128, 0.3)",
+					},
+					"& .cursada": {
+						backgroundColor: "rgba(0, 128, 34, 0.3)",
+					},
+					"& .cursando": {
+						backgroundColor: "rgba(255, 251, 38, 0.30)",
+					},
+					"& .pendiente": {
+						backgroundColor: "rgba(255, 148, 57, 0.30)",
+					},
+					"& .abandonada": {
+						backgroundColor: "rgba(125, 125, 125, 0.30)",
+					},
+					".none": { borderRight: "1px solid rgba(125, 125, 125, 0.20)" },
 				}}>
 				<Button
 					startIcon={<Save />}
@@ -189,6 +260,26 @@ const AcademicInfo = () => {
 								asignaturaActual: !plan.actual,
 							},
 						},
+					}}
+					getCellClassName={(params) => {
+						if (params.field === "condicion") {
+							if (params.value === "Aprobada") {
+								return "aprobada";
+							}
+							if (params.value === "Pendiente") {
+								return "pendiente";
+							}
+							if (params.value === "Cursando") {
+								return "cursando";
+							}
+							if (params.value === "Cursada") {
+								return "cursada";
+							}
+							if (params.value === "Abandonada") {
+								return "abandonada";
+							}
+						}
+						return "none";
 					}}
 					columns={VISIBLE_FIELDS}
 					slots={{ toolbar: GridToolbar }}

@@ -45,7 +45,8 @@ const Actions = ({ student = false, course = false }) => {
 			headerName: "Fecha",
 			type: "date",
 			editable: true,
-			align: "right",
+			headerAlign: "center",
+			align: "center",
 			valueGetter: (params) => (params.value ? new Date(params.value) : ""),
 			renderCell: (params) =>
 				`${params.value.getUTCDate()}/${
@@ -61,6 +62,8 @@ const Actions = ({ student = false, course = false }) => {
 		{
 			field: "archivo",
 			headerName: "Archivo",
+			headerAlign: "center",
+			align: "center",
 			editable: true,
 			width: 75,
 			renderCell: (params) =>
@@ -73,9 +76,17 @@ const Actions = ({ student = false, course = false }) => {
 				) : null,
 		},
 		{
-			field: "tutor",
-			headerName: "Tutor",
+			field: "observaciones",
+			headerName: "Observaciones",
+			flex: 1,
 			editable: true,
+		},
+		{
+			field: "tutor",
+			headerName: "Tutor/a",
+			editable: true,
+			headerAlign: "center",
+			align: "center",
 			type: "singleSelect",
 			width: 150,
 			valueOptions: isAdmin
@@ -86,6 +97,8 @@ const Actions = ({ student = false, course = false }) => {
 			field: "estado",
 			headerName: "Estado",
 			editable: true,
+			headerAlign: "center",
+			align: "center",
 			width: 175,
 			type: "singleSelect",
 			valueOptions: [
@@ -94,12 +107,6 @@ const Actions = ({ student = false, course = false }) => {
 				"Esperando respuesta",
 				"Finalizado",
 			],
-		},
-		{
-			field: "observaciones",
-			headerName: "Observaciones",
-			flex: 1,
-			editable: true,
 		},
 	];
 	const [isEdited, setIsEdited] = useState(false);
@@ -114,6 +121,19 @@ const Actions = ({ student = false, course = false }) => {
 				minHeight: student || course ? "65vh" : "89vh",
 				height: "100%",
 				alignItems: "flex-end",
+				"& .success": {
+					backgroundColor: "rgba(0, 128, 34, 0.3)",
+				},
+				"& .grey": {
+					backgroundColor: "rgba(125, 125, 125, 0.30)",
+				},
+				"& .yellow": {
+					backgroundColor: "rgba(255, 251, 38, 0.30)",
+				},
+				"& .orange": {
+					backgroundColor: "rgba(255, 148, 57, 0.30)",
+				},
+				".none": { borderRight: "1px solid rgba(125, 125, 125, 0.20)" },
 			}}>
 			<Box
 				display={"flex"}
@@ -154,6 +174,23 @@ const Actions = ({ student = false, course = false }) => {
 				slots={{ toolbar: GridToolbar }}
 				loading={isLoadingE || isLoadingG}
 				getRowHeight={() => "auto"}
+				getCellClassName={(params) => {
+					if (params.field === "estado") {
+						if (params.value === "No iniciado") {
+							return "grey";
+						}
+						if (params.value === "En proceso") {
+							return "yellow";
+						}
+						if (params.value === "Esperando respuesta") {
+							return "orange";
+						}
+						if (params.value === "Finalizado") {
+							return "success";
+						}
+					}
+					return "none";
+				}}
 				slotProps={{
 					toolbar: {
 						showQuickFilter: true,
