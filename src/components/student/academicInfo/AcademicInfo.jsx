@@ -192,16 +192,14 @@ const AcademicInfo = () => {
 							<FormLabel htmlFor="regular">No</FormLabel>
 							<Switch
 								size="medium"
-								label={`Alumno regular: ${esRegular}`}
-								id="regular"
+								checked={esRegular}
 								onChange={async (e) => {
-									if (e.target.value)
-										await updateStudent(
-											dispatch,
-											token,
-											{ esRegular: e.target.value },
-											_id
-										);
+									await updateStudent(
+										dispatch,
+										token,
+										{ esRegular: e.target.checked },
+										_id
+									);
 								}}
 							/>
 							<FormLabel htmlFor="regular">Si</FormLabel>
