@@ -182,6 +182,7 @@ const AcademicInfo = () => {
 					rows={detallePlan}
 					editMode="row"
 					density="compact"
+					getRowHeight={() => "auto"}
 					initialState={{
 						columns: {
 							columnVisibilityModel: {
@@ -217,7 +218,19 @@ const AcademicInfo = () => {
 						return oldRow;
 					}}
 					autoHeight={true}
-					sx={{ display: "flex", width: "100%" }}
+					sx={{
+						display: "flex",
+						width: "100%",
+						"&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell": {
+							py: "8px",
+						},
+						"&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell": {
+							py: "15px",
+						},
+						"&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell": {
+							py: "22px",
+						},
+					}}
 				/>
 			</Box>
 		</Box>

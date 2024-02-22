@@ -153,6 +153,7 @@ const Actions = ({ student = false, course = false }) => {
 				columns={VISIBLE_FIELDS}
 				slots={{ toolbar: GridToolbar }}
 				loading={isLoadingE || isLoadingG}
+				getRowHeight={() => "auto"}
 				slotProps={{
 					toolbar: {
 						showQuickFilter: true,
@@ -183,7 +184,19 @@ const Actions = ({ student = false, course = false }) => {
 					}
 					return oldRow;
 				}}
-				sx={{ display: "flex", width: "100%" }}
+				sx={{
+					display: "flex",
+					width: "100%",
+					"&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell": {
+						py: "8px",
+					},
+					"&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell": {
+						py: "15px",
+					},
+					"&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell": {
+						py: "22px",
+					},
+				}}
 			/>
 			<AddAction
 				open={open}
