@@ -19,8 +19,15 @@ const PersonalInfo = () => {
 		plan,
 		horarioTrabajo,
 		detallesTrabajo,
+		relPrograma,
+		ingresoPrograma,
+		tutores,
 	} = useSelector((state) => state.student.currentStudent);
 	const { isLoading } = useSelector((state) => state.student);
+	const { tutores: _tutores } = useSelector((state) => state.tutores);
+	const tutor = _tutores.find((tutor) => {
+		return tutor._id === tutores;
+	});
 	const [open, setOpen] = useState(false);
 	return (
 		<>
@@ -151,6 +158,58 @@ const PersonalInfo = () => {
 						</Typography>
 					</Typography>
 				</Paper>
+				<Typography
+					variant="h6"
+					color={"primary"}>
+					Relación con el Programa
+				</Typography>
+				<Paper
+					sx={{
+						backgroundColor: "whitesmoke",
+						display: "flex",
+						flexDirection: "column",
+						padding: 2,
+						gap: 1,
+					}}>
+					<Box display={"flex"}>
+						<Typography
+							display={"flex"}
+							alignItems={"center"}
+							fontWeight={600}
+							gap={1}
+							flex={1}>
+							Fecha de inscripción:
+							<Typography sx={{ fontWeight: 400 }}>
+								{ingresoPrograma
+									? ingresoPrograma.substr(0, 10).split("-").reverse().join("/")
+									: "Sin información"}
+							</Typography>
+						</Typography>
+						<Typography
+							display={"flex"}
+							alignItems={"center"}
+							fontWeight={600}
+							gap={1}>
+							Estado:
+							<Typography sx={{ fontWeight: 400 }}>
+								{relPrograma ? relPrograma : "Sin información"}
+							</Typography>
+						</Typography>
+					</Box>
+					<Typography
+						display={"flex"}
+						alignItems={"center"}
+						fontWeight={600}
+						gap={1}>
+						Tutor/a asignado/a:
+						<Typography sx={{ fontWeight: 400 }}>
+							{tutores
+								? `${tutor?.apellido} ${tutor?.nombre}` ||
+								  "El/la tutor/a no se encuentra en la base de datos, designe otro/a"
+								: "Sin asignar"}
+						</Typography>
+					</Typography>
+				</Paper>
 				<Box
 					display={"flex"}
 					gap={1}
@@ -183,6 +242,9 @@ const PersonalInfo = () => {
 					horarioTrabajo,
 					detallesTrabajo,
 					plan: plan._id,
+					relPrograma,
+					ingresoPrograma,
+					tutores,
 				}}
 				id={_id}
 			/>

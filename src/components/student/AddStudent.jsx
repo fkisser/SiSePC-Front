@@ -35,7 +35,9 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 		setOpen(false);
 	};
 	const { control, handleSubmit, reset } = useForm({
-		defaultValues: values ? values : studentInitialValues,
+		defaultValues: values
+			? { ...values, ingresoPrograma: values.ingresoPrograma.substr(0, 10) }
+			: studentInitialValues,
 		resolver: yupResolver(studentValidationSchema),
 		reValidateMode: "onChange",
 	});
@@ -54,8 +56,10 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 		if (result) handleClose();
 	};
 	const { curriculums } = useSelector((state) => state.curriculums);
+	const { tutores } = useSelector((state) => state.tutores);
 	const { isLoading, error } = useSelector((state) => state.student);
 	const [openBDr, setOpenBDr] = useState();
+	console.log(values);
 	const handleCloseBDr = () => {
 		setOpenBDr(false);
 	};
@@ -70,7 +74,7 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<FormControl>
 						<Box
-							sx={{ display: "grid", gap: 3, justifyContent: "center", mt: 2 }}>
+							sx={{ display: "grid", gap: 2, justifyContent: "center", mt: 2 }}>
 							<Box
 								display={"flex"}
 								gap={1}
@@ -217,65 +221,155 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 									</Box>
 								)}
 							/>
+							<Box
+								display={"flex"}
+								gap={1}
+								sx={{ flexDirection: { xs: "column", sm: "row" } }}>
+								<Controller
+									name="ingresoPrograma"
+									control={control}
+									render={({ field }) => (
+										<TextField
+											fullWidth
+											{...field}
+											labelId="ingresoPrograma"
+											name="ingresoPrograma"
+											type="date"
+											label={`Fecha de inscripción: ${
+												values
+													? values.ingresoPrograma
+															.substr(0, 10)
+															.split("-")
+															.reverse()
+															.join("/")
+													: ""
+											}`}
+											value={values && values.ingresoPrograma.substr(0, 10)}
+											disabled={values}
+											required
+											InputLabelProps={{ shrink: true }}
+											variant="outlined"
+										/>
+									)}
+								/>
+								<Controller
+									name="relPrograma"
+									control={control}
+									render={({ field }) => (
+										<Box
+											display={"flex"}
+											position={"relative"}
+											width={"100%"}>
+											<InputLabel
+												id="relPrograma"
+												sx={{ backgroundColor: "white", px: 0.75, ml: -0.5 }}>
+												Estado
+											</InputLabel>
+											<Select
+												fullWidth
+												{...field}
+												labelId="relPrograma"
+												name="relPrograma"
+												type="text"
+												// defaultValue={values ? values.relPrograma : undefined}
+												variant="outlined">
+												<MenuItem
+													value={"Activo"}
+													defaultValue={values.relPrograma === "Activo"}>
+													Activo
+												</MenuItem>
+												<MenuItem
+													value={"Pasivo"}
+													defaultValue={values.relPrograma === "Pasivo"}>
+													Pasivo
+												</MenuItem>
+												<MenuItem
+													value={"Abandono"}
+													defaultValue={values.relPrograma === "Abandono"}>
+													Abandonó
+												</MenuItem>
+												<MenuItem
+													value={"Graduado"}
+													defaultValue={values.relPrograma === "Graduado"}>
+													Graduado/a
+												</MenuItem>
+											</Select>
+										</Box>
+									)}
+								/>
+							</Box>
 							<Controller
-								name="cursando"
+								name="tutores"
 								control={control}
 								render={({ field }) => (
-									<Box
-										position={"relative"}
-										display={"flex"}
-										alignItems={"center"}
-										gap={1}>
-										<Switch
+									<Box position={"relative"}>
+										<InputLabel
+											id="tutores"
+											sx={{ backgroundColor: "white", px: 0.75, ml: -0.5 }}>
+											Tutor/a designado/a
+										</InputLabel>
+										<Select
+											fullWidth
 											{...field}
-											checked={field.value}
-											name="cursando"
-											id="cursando"
-										/>
-										<FormLabel htmlFor="cursando">
-											Cursa este cuatrimestre
-										</FormLabel>
+											labelId="tutores"
+											name="tutores"
+											type="text"
+											variant="outlined">
+											{tutores.map((tutor) => (
+												<MenuItem
+													key={tutor._id}
+													value={
+														tutor._id
+													}>{`${tutor.nombre} ${tutor.apellido}`}</MenuItem>
+											))}
+										</Select>
 									</Box>
 								)}
 							/>
-							<Controller
-								name="trabaja"
-								control={control}
-								render={({ field }) => (
-									<Box
-										display={"flex"}
-										alignItems={"center"}
-										gap={1}>
-										<Switch
-											{...field}
-											checked={field.value}
-											name="trabaja"
-											id="trabaja"
-										/>
-										<FormLabel htmlFor="trabaja">Trabaja</FormLabel>
-									</Box>
-								)}
-							/>
-							<Controller
-								name="relCarrera"
-								control={control}
-								render={({ field }) => (
-									<Box
-										display={"flex"}
-										alignItems={"center"}
-										gap={1}>
-										<Switch
-											{...field}
-											checked={field.value}
-											name="relCarrera"
-											id="relCarrera"
-										/>
-										<FormLabel htmlFor="relCarrera">
-											El trabajo está relacionado con la carrera
-										</FormLabel>
-									</Box>
-								)}
-							/>
+							<Box
+								display={"flex"}
+								gap={1}
+								justifyContent={"space-between"}
+								sx={{ flexDirection: { xs: "column", sm: "row" } }}>
+								<Controller
+									name="trabaja"
+									control={control}
+									render={({ field }) => (
+										<Box
+											display={"flex"}
+											alignItems={"center"}
+											gap={1}>
+											<Switch
+												{...field}
+												checked={field.value}
+												name="trabaja"
+												id="trabaja"
+											/>
+											<FormLabel htmlFor="trabaja">Trabaja</FormLabel>
+										</Box>
+									)}
+								/>
+								<Controller
+									name="relCarrera"
+									control={control}
+									render={({ field }) => (
+										<Box
+											display={"flex"}
+											alignItems={"center"}
+											gap={1}>
+											<Switch
+												{...field}
+												checked={field.value}
+												name="relCarrera"
+												id="relCarrera"
+											/>
+											<FormLabel htmlFor="relCarrera">
+												El trabajo está relacionado con la carrera
+											</FormLabel>
+										</Box>
+									)}
+								/>
+							</Box>
 							<Controller
 								name="horarioTrabajo"
 								control={control}
@@ -300,7 +394,7 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 										placeholder="Descripcion del trabajo"
 										variant="outlined"
 										multiline
-										minRows={3}
+										maxRows={3}
 									/>
 								)}
 							/>
@@ -326,7 +420,8 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 			</DialogContent>
 			<Backdrop
 				open={openBDr}
-				onClick={handleCloseBDr}>
+				onClick={handleCloseBDr}
+				sx={{ zIndex: 3 }}>
 				<Paper sx={{ p: 4 }}>
 					<Typography color={error ? "error" : "success"}>
 						{error

@@ -11,13 +11,26 @@ import { successStudent } from "../../redux/students/studentSlice";
 const VISIBLE_FIELDS = [
 	{ field: "apellido", headerName: "Apellido", flex: 1 },
 	{ field: "nombre", headerName: "Nombre", flex: 1 },
-	{ field: "dni", headerName: "DNI", width: 100 },
-	{ field: "carrera", headerName: "Carrera", flex: 1 },
-	{ field: "plan", headerName: "Plan" },
 	{
-		field: "cursando",
-		headerName: "Cursando",
-		type: "boolean",
+		field: "dni",
+		headerName: "DNI",
+		width: 100,
+		headerAlign: "center",
+		align: "center",
+	},
+	{
+		field: "carrera",
+		headerName: "Carrera",
+		flex: 1,
+		headerAlign: "center",
+		align: "center",
+	},
+	{ field: "plan", headerName: "Plan", headerAlign: "center", align: "center" },
+	{
+		field: "relPrograma",
+		headerName: "Estado",
+		headerAlign: "center",
+		align: "center",
 	},
 ];
 
@@ -81,7 +94,23 @@ const Students = () => {
 				</Button>
 			</Box>
 
-			<Box sx={{ height: "80vh" }}>
+			<Box
+				sx={{
+					height: "80vh",
+					"& .graduado": {
+						backgroundColor: "rgba(0, 107, 128, 0.3)",
+					},
+					"& .activo": {
+						backgroundColor: "rgba(0, 128, 34, 0.3)",
+					},
+					"& .pasivo": {
+						backgroundColor: "rgba(255, 251, 38, 0.30)",
+					},
+					"& .abandono": {
+						backgroundColor: "rgba(125, 125, 125, 0.30)",
+					},
+					".none": { borderRight: "1px solid rgba(125, 125, 125, 0.20)" },
+				}}>
 				<DataGrid
 					rows={visibleStudents}
 					columns={VISIBLE_FIELDS}
@@ -92,7 +121,29 @@ const Students = () => {
 							showQuickFilter: true,
 						},
 					}}
-					autoPageSize={true}
+					getCellClassName={(params) => {
+						if (params.field === "condicion") {
+							if (params.value === "Aprobada") {
+								return "aprobada";
+							}
+							if (params.value === "Pendiente") {
+								return "pendiente";
+							}
+							if (params.value === "Cursando") {
+								return "cursando";
+							}
+							if (params.value === "Cursada") {
+								return "cursada";
+							}
+							if (params.value === "Abandonada") {
+								return "abandonada";
+							}
+						}
+						return "none";
+					}}
+					pagination={{ paginationModel: { pageSize: 500, page: 0 } }}
+					density="compact"
+					hideFooter
 					onRowClick={handleClick}
 				/>
 			</Box>
