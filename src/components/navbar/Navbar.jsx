@@ -12,7 +12,7 @@ const Navbar = ({ navLinks }) => {
 	if (location.pathname !== "/login")
 		return (
 			<>
-				<AppBar position="static">
+				<AppBar position="sticky">
 					<Toolbar>
 						<IconButton
 							color="inherit"

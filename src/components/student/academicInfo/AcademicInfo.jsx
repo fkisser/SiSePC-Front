@@ -106,7 +106,9 @@ const AcademicInfo = () => {
 						gap={1}
 						flex={1}>
 						Carrera:
-						<Typography fontWeight={400}>
+						<Typography
+							fontWeight={400}
+							component={"span"}>
 							{plan.carrera.nombre || ""}
 						</Typography>
 					</Typography>
@@ -116,15 +118,20 @@ const AcademicInfo = () => {
 						gap={1}
 						flex={1}>
 						Plan:
-						<Typography sx={{ fontWeight: 400 }}>{plan.año || ""}</Typography>
+						<Typography
+							sx={{ fontWeight: 400 }}
+							component={"span"}>
+							{plan.año || ""}
+						</Typography>
 					</Typography>
 				</Box>
 				<Box
 					display={"flex"}
-					flex={1}
-					gap={1}>
+					flexDirection={{ xs: "column", md: "row" }}
+					justifyContent={"space-between"}
+					flexWrap={"wrap"}
+					gap={1.5}>
 					<TextField
-						fullWidth
 						size="small"
 						label={`Última reinscripción al año académico: ${
 							ultimaReinscripcion
@@ -136,6 +143,7 @@ const AcademicInfo = () => {
 						}`}
 						InputLabelProps={{ shrink: true }}
 						type="date"
+						sx={{ minWidth: "350px" }}
 						onBlur={async (e) => {
 							if (e.target.value)
 								await updateStudent(
@@ -147,8 +155,8 @@ const AcademicInfo = () => {
 						}}
 					/>
 					<TextField
-						fullWidth
 						size="small"
+						sx={{ minWidth: "350px" }}
 						label={`Fecha de última materia aprobada: ${
 							ultimaAprobada
 								?.toString()
@@ -172,9 +180,10 @@ const AcademicInfo = () => {
 					<Box
 						display={"flex"}
 						justifyContent={"center"}
-						width={"20vw"}
+						sx={{ minWidth: "200px" }}
 						border={"1px solid rgba(125, 125, 125, 0.50)"}
 						borderRadius={1}
+						px={2}
 						position={"relative"}>
 						<FormLabel
 							sx={{
