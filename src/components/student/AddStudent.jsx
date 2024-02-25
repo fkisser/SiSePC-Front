@@ -59,7 +59,6 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 	const { tutores } = useSelector((state) => state.tutores);
 	const { isLoading, error } = useSelector((state) => state.student);
 	const [openBDr, setOpenBDr] = useState();
-	console.log(values);
 	const handleCloseBDr = () => {
 		setOpenBDr(false);
 	};

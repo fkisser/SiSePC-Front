@@ -122,7 +122,6 @@ const Students = () => {
 						},
 					}}
 					getCellClassName={(params) => {
-						console.log(params);
 						if (params.field === "relPrograma") {
 							if (params.value === "Graduado") {
 								return "graduado";
