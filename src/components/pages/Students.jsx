@@ -52,7 +52,7 @@ const Students = () => {
 	}, [dispatch, token]);
 	const { students, isLoading } = useSelector((state) => state.students);
 	const visibleStudents = students.map((student) => {
-		const { _id: id, apellido, nombre, dni, plan, cursando } = student;
+		const { _id: id, apellido, nombre, dni, plan, relPrograma } = student;
 		return {
 			id,
 			apellido,
@@ -60,7 +60,7 @@ const Students = () => {
 			dni,
 			carrera: plan.carrera.nombre,
 			plan: plan.año,
-			cursando,
+			relPrograma,
 		};
 	});
 
@@ -122,21 +122,19 @@ const Students = () => {
 						},
 					}}
 					getCellClassName={(params) => {
-						if (params.field === "condicion") {
-							if (params.value === "Aprobada") {
-								return "aprobada";
+						console.log(params);
+						if (params.field === "relPrograma") {
+							if (params.value === "Graduado") {
+								return "graduado";
 							}
-							if (params.value === "Pendiente") {
-								return "pendiente";
+							if (params.value === "Activo") {
+								return "activo";
 							}
-							if (params.value === "Cursando") {
-								return "cursando";
+							if (params.value === "Pasivo") {
+								return "pasivo";
 							}
-							if (params.value === "Cursada") {
-								return "cursada";
-							}
-							if (params.value === "Abandonada") {
-								return "abandonada";
+							if (params.value === "Abandono") {
+								return "abandono";
 							}
 						}
 						return "none";
