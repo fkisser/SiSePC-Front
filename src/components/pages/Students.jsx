@@ -8,41 +8,53 @@ import { Add } from "@mui/icons-material";
 import { fetchStudents } from "../../axios/students";
 import { successStudent } from "../../redux/students/studentSlice";
 
-const VISIBLE_FIELDS = [
-	{ field: "apellido", headerName: "Apellido", flex: 1 },
-	{ field: "nombre", headerName: "Nombre", flex: 1 },
-	{
-		field: "dni",
-		headerName: "DNI",
-		width: 100,
-		headerAlign: "center",
-		align: "center",
-	},
-	{
-		field: "carrera",
-		headerName: "Carrera",
-		flex: 1,
-		headerAlign: "center",
-		align: "center",
-	},
-	{ field: "plan", headerName: "Plan", headerAlign: "center", align: "center" },
-	{
-		field: "relPrograma",
-		headerName: "Estado",
-		headerAlign: "center",
-		align: "center",
-	},
-	{
-		field: "tutores",
-		headerName: "Tutor/a",
-		headerAlign: "center",
-		align: "center",
-	},
-];
-
 const Students = () => {
+	const VISIBLE_FIELDS = [
+		{ field: "apellido", headerName: "Apellido", flex: 1 },
+		{ field: "nombre", headerName: "Nombre", flex: 1 },
+		{
+			field: "dni",
+			headerName: "DNI",
+			width: 100,
+			headerAlign: "center",
+			align: "center",
+		},
+		{
+			field: "carrera",
+			headerName: "Carrera",
+			flex: 1,
+			headerAlign: "center",
+			align: "center",
+		},
+		{
+			field: "plan",
+			headerName: "Plan",
+			headerAlign: "center",
+			align: "center",
+		},
+		{
+			field: "relPrograma",
+			headerName: "Estado",
+			headerAlign: "center",
+			align: "center",
+		},
+		{
+			field: "tutores",
+			headerName: "Tutor/a",
+			headerAlign: "center",
+			align: "center",
+			width: 150,
+			renderCell: (params) => {
+				const tutor = _tutores.find((tutor) => {
+					return tutor._id === params.value;
+				});
+				return params.value ? `${tutor.apellido} ${tutor.nombre}` : null;
+			},
+		},
+	];
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const { tutores: _tutores } = useSelector((state) => state.tutores);
 	const { token } = useSelector((state) => state.user.currentUser);
 	const handleClick = async (params) => {
 		const student = students.find((_student) => {
