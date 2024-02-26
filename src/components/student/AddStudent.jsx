@@ -274,22 +274,22 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 												variant="outlined">
 												<MenuItem
 													value={"Activo"}
-													defaultValue={values.relPrograma === "Activo"}>
+													defaultValue={values?.relPrograma === "Activo"}>
 													Activo
 												</MenuItem>
 												<MenuItem
 													value={"Pasivo"}
-													defaultValue={values.relPrograma === "Pasivo"}>
+													defaultValue={values?.relPrograma === "Pasivo"}>
 													Pasivo
 												</MenuItem>
 												<MenuItem
 													value={"Abandono"}
-													defaultValue={values.relPrograma === "Abandono"}>
+													defaultValue={values?.relPrograma === "Abandono"}>
 													Abandonó
 												</MenuItem>
 												<MenuItem
 													value={"Graduado"}
-													defaultValue={values.relPrograma === "Graduado"}>
+													defaultValue={values?.relPrograma === "Graduado"}>
 													Graduado/a
 												</MenuItem>
 											</Select>
