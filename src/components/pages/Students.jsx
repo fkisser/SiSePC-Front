@@ -32,6 +32,12 @@ const VISIBLE_FIELDS = [
 		headerAlign: "center",
 		align: "center",
 	},
+	{
+		field: "tutores",
+		headerName: "Tutor/a",
+		headerAlign: "center",
+		align: "center",
+	},
 ];
 
 const Students = () => {
@@ -52,7 +58,15 @@ const Students = () => {
 	}, [dispatch, token]);
 	const { students, isLoading } = useSelector((state) => state.students);
 	const visibleStudents = students.map((student) => {
-		const { _id: id, apellido, nombre, dni, plan, relPrograma } = student;
+		const {
+			_id: id,
+			apellido,
+			nombre,
+			dni,
+			plan,
+			relPrograma,
+			tutores,
+		} = student;
 		return {
 			id,
 			apellido,
@@ -61,6 +75,7 @@ const Students = () => {
 			carrera: plan.carrera.nombre,
 			plan: plan.año,
 			relPrograma,
+			tutores,
 		};
 	});
 

@@ -244,7 +244,6 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 													: ""
 											}`}
 											value={values && values.ingresoPrograma?.substr(0, 10)}
-											disabled={values.ingresoPrograma}
 											required
 											InputLabelProps={{ shrink: true }}
 											variant="outlined"
