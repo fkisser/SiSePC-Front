@@ -36,7 +36,7 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 	};
 	const { control, handleSubmit, reset } = useForm({
 		defaultValues: values
-			? { ...values, ingresoPrograma: values.ingresoPrograma.substr(0, 10) }
+			? { ...values, ingresoPrograma: values.ingresoPrograma?.substr(0, 10) }
 			: studentInitialValues,
 		resolver: yupResolver(studentValidationSchema),
 		reValidateMode: "onChange",
@@ -237,13 +237,13 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 											label={`Fecha de inscripción: ${
 												values
 													? values.ingresoPrograma
-															.substr(0, 10)
+															?.substr(0, 10)
 															.split("-")
 															.reverse()
 															.join("/")
 													: ""
 											}`}
-											value={values && values.ingresoPrograma.substr(0, 10)}
+											value={values && values.ingresoPrograma?.substr(0, 10)}
 											disabled={values}
 											required
 											InputLabelProps={{ shrink: true }}
