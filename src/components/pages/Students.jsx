@@ -44,7 +44,7 @@ const Students = () => {
 			headerAlign: "center",
 			align: "center",
 			width: 150,
-			renderCell: (params) => {
+			valueGetter: (params) => {
 				const tutor = _tutores.find((tutor) => {
 					return tutor._id === params.value;
 				});
