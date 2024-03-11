@@ -210,7 +210,7 @@ const Actions = ({ student = false, course = false }) => {
 							else return action;
 						});
 						if (student) dispatch(newActionsStudent(newVisibleActions));
-						// else if (course) dispatch(newActionsStudent(newVisibleActions));
+						// else if (course) dispatch(newActionsCourse(newVisibleActions));
 						else {
 							dispatch(successActions(newVisibleActions));
 							await updateAction(dispatch, token, newRow, newRow._id);

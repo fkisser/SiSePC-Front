@@ -43,10 +43,12 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 	const { acciones: accionesE, _id: studentId } = useSelector(
 		(state) => state.student.currentStudent
 	);
-	const { actions: accionesG, isLoading: isLoadingG } = useSelector(
-		(state) => state.actions
-	);
-	const { isLoading: isLoadingE, error } = useSelector(
+	const {
+		actions: accionesG,
+		isLoading: isLoadingG,
+		error: errorG,
+	} = useSelector((state) => state.actions);
+	const { isLoading: isLoadingE, error: errorE } = useSelector(
 		(state) => state.student
 	);
 	const { tutores } = useSelector((state) => state.tutores);
@@ -75,10 +77,10 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 		}
 		setOpenBDr(true);
 	};
-	const [openBDr, setOpenBDr] = useState();
+	const [openBDr, setOpenBDr] = useState(false);
 	const handleCloseBDr = () => {
 		setOpenBDr(false);
-		if (!error) handleClose();
+		if (!errorE || !errorG) handleClose();
 	};
 	return (
 		<Dialog
@@ -114,10 +116,10 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 											InputLabelProps={{ shrink: true }}
 											variant="outlined"
 											required
-											error={String(error).includes("fecha")}
-											helperText={
-												String(error).includes("fecha") ? String(error) : ""
-											}
+											// error={String(error).includes("fecha")}
+											// helperText={
+											// 	String(error).includes("fecha") ? String(error) : ""
+											// }
 										/>
 									)}
 								/>
@@ -169,10 +171,10 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 										required
 										label="Descripción"
 										variant="outlined"
-										error={String(error).includes("descripcion")}
-										helperText={
-											String(error).includes("descripcion") ? String(error) : ""
-										}
+										// error={String(error).includes("descripcion")}
+										// helperText={
+										// 	String(error).includes("descripcion") ? String(error) : ""
+										// }
 									/>
 								)}
 							/>
@@ -186,10 +188,10 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 										type="text"
 										label="Link a un archivo"
 										variant="outlined"
-										error={String(error).includes("archivo")}
-										helperText={
-											String(error).includes("archivo") ? String(error) : ""
-										}
+										// error={String(error).includes("archivo")}
+										// helperText={
+										// 	String(error).includes("archivo") ? String(error) : ""
+										// }
 									/>
 								)}
 							/>
@@ -229,14 +231,14 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 										type="text"
 										label="Observaciones"
 										variant="outlined"
-										error={String(error).includes("observaciones")}
 										multiline
 										minRows={3}
-										helperText={
-											String(error).includes("observaciones")
-												? String(error)
-												: ""
-										}
+										// error={String(error).includes("observaciones")}
+										// helperText={
+										// 	String(error).includes("observaciones")
+										// 		? String(error)
+										// 		: ""
+										// }
 									/>
 								)}
 							/>
@@ -262,11 +264,11 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 				open={openBDr}
 				onClick={handleCloseBDr}>
 				<Paper sx={{ p: 4 }}>
-					<Typography color={error ? "error" : "success"}>
+					<Typography color={errorE || errorG ? "error" : "success"}>
 						{isLoadingE || isLoadingG ? (
 							<CircularProgress />
-						) : error ? (
-							error
+						) : errorE || errorG ? (
+							errorE | errorG
 						) : (
 							"Acción agregada correctamente"
 						)}
