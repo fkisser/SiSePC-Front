@@ -2,15 +2,16 @@ import { Button, Icon, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
 
 const HomeCard = ({ data }) => {
-	const { title, path, icon } = data;
+	const { title, path, icon, disabled } = data;
 	return (
 		<Button
 			component={NavLink}
 			to={path}
 			variant="outlined"
+			disabled={disabled}
 			sx={{
 				width: { xs: "100%", md: "45%" },
-				height: { xs: "25%", md: "50%", lg: "100%" },
+				height: { xs: "25%", md: "50%", lg: "75%" },
 				textAlign: "center",
 				transition: "all ease .5s",
 				display: "flex",
@@ -23,11 +24,14 @@ const HomeCard = ({ data }) => {
 					backgroundColor: "#046CBB",
 					color: "white",
 					transition: "all ease .5s",
-					fontSize: { xs: "18px", sm: "50px" },
 				},
 			}}>
-			<Icon>{icon}</Icon>
-			<Typography component={"h1"}>{title}</Typography>
+			<Icon fontSize={"large"}>{icon}</Icon>
+			<Typography
+				component={"h1"}
+				fontSize={{ xs: "18px", sm: "22px" }}>
+				{title}
+			</Typography>
 		</Button>
 	);
 };

@@ -24,6 +24,7 @@ const PersonalInfo = () => {
 		tutores,
 	} = useSelector((state) => state.student.currentStudent);
 	const { isLoading } = useSelector((state) => state.student);
+	const { isAdmin } = useSelector((state) => state.user.currentUser);
 	const { tutores: _tutores } = useSelector((state) => state.tutores);
 	const tutor = _tutores.find((tutor) => {
 		return tutor._id === tutores;
@@ -218,7 +219,7 @@ const PersonalInfo = () => {
 						variant="outlined"
 						size="large"
 						startIcon={<Edit />}
-						disabled={isLoading}
+						disabled={isLoading || !isAdmin}
 						onClick={() => {
 							setOpen(true);
 						}}>

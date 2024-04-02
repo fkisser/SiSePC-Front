@@ -92,55 +92,56 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 				<form
 					onSubmit={handleSubmit(onSubmit)}
 					style={{ display: "flex", width: "100%" }}>
-					<FormControl fullWidth>
+					<Box
+						display={"flex"}
+						flexDirection={"column"}
+						width={"100%"}
+						mt={2}
+						gap={3}
+						justifyContent={"center"}>
 						<Box
 							display={"flex"}
-							flexDirection={"column"}
-							width={"100%"}
-							mt={2}
-							gap={3}
-							justifyContent={"center"}>
-							<Box
-								display={"flex"}
-								gap={1}>
-								<Controller
-									name="fecha"
-									control={control}
-									render={({ field }) => (
-										<TextField
-											fullWidth
-											{...field}
-											name="fecha"
-											type="date"
-											label={`Fecha`}
-											InputLabelProps={{ shrink: true }}
-											variant="outlined"
-											required
-											// error={String(error).includes("fecha")}
-											// helperText={
-											// 	String(error).includes("fecha") ? String(error) : ""
-											// }
-										/>
-									)}
-								/>
-								<Controller
-									name="tutor"
-									control={control}
-									render={({ field }) => (
-										<Box
-											position={"relative"}
-											display={"flex"}
-											width={"100%"}>
-											<InputLabel id="tutor">Tutor/a</InputLabel>
+							gap={1}>
+							<Controller
+								name="fecha"
+								control={control}
+								render={({ field }) => (
+									<TextField
+										fullWidth
+										{...field}
+										name="fecha"
+										type="date"
+										label={`Fecha`}
+										InputLabelProps={{ shrink: true }}
+										variant="outlined"
+										required
+										// error={String(error).includes("fecha")}
+										// helperText={
+										// 	String(error).includes("fecha") ? String(error) : ""
+										// }
+									/>
+								)}
+							/>
+							<Controller
+								name="tutor"
+								control={control}
+								render={({ field }) => (
+									<Box
+										position={"relative"}
+										display={"flex"}
+										width={"100%"}>
+										<FormControl fullWidth>
+											<InputLabel id="tutor">Tutor/a *</InputLabel>
 											<Select
 												{...field}
 												id="tutor"
 												fullWidth
 												labelId="tutor"
+												label="Tutor/a"
 												name="tutor"
 												type="text"
-												label="Tutor/a"
-												variant="outlined">
+												variant="outlined"
+												required>
 												{isAdmin ? (
 													_tutores?.map((tutor) => (
 														<MenuItem
@@ -152,55 +153,59 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 												) : (
 													<MenuItem
 														key={_id}
-														value={_id}>{`${apellido} ${nombre}`}</MenuItem>
+														value={_id}>
+														{`${apellido} ${nombre}`}
+													</MenuItem>
 												)}
 											</Select>
-										</Box>
-									)}
+										</FormControl>
+									</Box>
+								)}
+							/>
+						</Box>
+
+						<Controller
+							name="descripcion"
+							control={control}
+							render={({ field }) => (
+								<TextField
+									{...field}
+									name="descripcion"
+									type="text"
+									required
+									label="Descripción"
+									variant="outlined"
+									// error={String(error).includes("descripcion")}
+									// helperText={
+									// 	String(error).includes("descripcion") ? String(error) : ""
+									// }
 								/>
-							</Box>
+							)}
+						/>
+						<Controller
+							name="archivo"
+							control={control}
+							render={({ field }) => (
+								<TextField
+									{...field}
+									name="archivo"
+									type="text"
+									label="Link a un archivo"
+									variant="outlined"
+									// error={String(error).includes("archivo")}
+									// helperText={
+									// 	String(error).includes("archivo") ? String(error) : ""
+									// }
+								/>
+							)}
+						/>
 
-							<Controller
-								name="descripcion"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										{...field}
-										name="descripcion"
-										type="text"
-										required
-										label="Descripción"
-										variant="outlined"
-										// error={String(error).includes("descripcion")}
-										// helperText={
-										// 	String(error).includes("descripcion") ? String(error) : ""
-										// }
-									/>
-								)}
-							/>
-							<Controller
-								name="archivo"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										{...field}
-										name="archivo"
-										type="text"
-										label="Link a un archivo"
-										variant="outlined"
-										// error={String(error).includes("archivo")}
-										// helperText={
-										// 	String(error).includes("archivo") ? String(error) : ""
-										// }
-									/>
-								)}
-							/>
-
-							<Controller
-								name="estado"
-								control={control}
-								render={({ field }) => (
-									<Box position={"relative"}>
+						<Controller
+							name="estado"
+							control={control}
+							render={({ field }) => (
+								<Box position={"relative"}>
+									<FormControl fullWidth>
 										<InputLabel id="estado">Estado</InputLabel>
 										<Select
 											fullWidth
@@ -218,50 +223,51 @@ const AddAction = ({ open, setOpen, student = false, course = false }) => {
 											</MenuItem>
 											<MenuItem value={"Finalizado"}>Finalizado</MenuItem>
 										</Select>
-									</Box>
-								)}
-							/>
-							<Controller
-								name="observaciones"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										{...field}
-										name="observaciones"
-										type="text"
-										label="Observaciones"
-										variant="outlined"
-										multiline
-										minRows={3}
-										// error={String(error).includes("observaciones")}
-										// helperText={
-										// 	String(error).includes("observaciones")
-										// 		? String(error)
-										// 		: ""
-										// }
-									/>
-								)}
-							/>
+									</FormControl>
+								</Box>
+							)}
+						/>
+						<Controller
+							name="observaciones"
+							control={control}
+							render={({ field }) => (
+								<TextField
+									{...field}
+									name="observaciones"
+									type="text"
+									label="Observaciones"
+									variant="outlined"
+									multiline
+									minRows={3}
+									// error={String(error).includes("observaciones")}
+									// helperText={
+									// 	String(error).includes("observaciones")
+									// 		? String(error)
+									// 		: ""
+									// }
+								/>
+							)}
+						/>
 
-							<DialogActions>
-								<Button onClick={handleClose}>Cancelar</Button>
-								<Button
-									type="submit"
-									variant="contained"
-									color="primary">
-									{isLoadingE || isLoadingG ? (
-										<CircularProgress size={24} />
-									) : (
-										"Agregar"
-									)}
-								</Button>
-							</DialogActions>
-						</Box>
-					</FormControl>
+						<DialogActions>
+							<Button onClick={handleClose}>Cancelar</Button>
+							<Button
+								type="submit"
+								variant="contained"
+								color="primary">
+								{isLoadingE || isLoadingG ? (
+									<CircularProgress size={24} />
+								) : (
+									"Agregar"
+								)}
+							</Button>
+						</DialogActions>
+					</Box>
 				</form>
 			</DialogContent>
 			<Backdrop
 				open={openBDr}
+				sx={{ zIndex: 99 }}
 				onClick={handleCloseBDr}>
 				<Paper sx={{ p: 4 }}>
 					<Typography color={errorE || errorG ? "error" : "success"}>

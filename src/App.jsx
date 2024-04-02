@@ -16,31 +16,37 @@ const navLinks = [
 		title: "Principal",
 		path: "/",
 		icon: "home",
+		disabled: false,
 	},
 	{
 		title: "Acciones generales",
 		path: "/acciones",
 		icon: "checklist",
+		disabled: false,
 	},
 	{
 		title: "Estudiantes",
 		path: "/estudiantes",
 		icon: "group",
+		disabled: false,
 	},
 	{
 		title: "Cátedras",
 		path: "/catedras",
 		icon: "school",
+		disabled: true,
 	},
 	{
 		title: "Planes de Estudio y Equivalencias",
 		path: "/planes",
 		icon: "format_list_numbered",
+		disabled: true,
 	},
 	{
 		title: "Resoluciones y Reglamentos",
 		path: "/resoluciones",
 		icon: "description",
+		disabled: true,
 	},
 ];
 

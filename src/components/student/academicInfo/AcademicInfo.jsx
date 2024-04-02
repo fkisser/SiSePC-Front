@@ -23,7 +23,7 @@ const AcademicInfo = () => {
 		esRegular,
 		detallePlan,
 	} = useSelector((state) => state.student.currentStudent);
-	const { token } = useSelector((state) => state.user.currentUser);
+	const { token, isAdmin } = useSelector((state) => state.user.currentUser);
 	const { isLoading } = useSelector((state) => state.student);
 
 	const VISIBLE_FIELDS = [
@@ -36,12 +36,12 @@ const AcademicInfo = () => {
 			field: "asignaturaActual",
 			headerName: "Equivalencia",
 			flex: 1,
-			editable: true,
+			editable: isAdmin,
 		},
 		{
 			field: "condicion",
 			headerName: "Condición",
-			editable: true,
+			editable: isAdmin,
 			headerAlign: "center",
 			align: "center",
 			type: "singleSelect",
@@ -58,7 +58,7 @@ const AcademicInfo = () => {
 			field: "fecha",
 			headerName: "Fecha",
 			type: "date",
-			editable: true,
+			editable: isAdmin,
 			headerAlign: "center",
 			align: "center",
 			valueGetter: (params) => (params.value ? new Date(params.value) : ""),
@@ -66,7 +66,7 @@ const AcademicInfo = () => {
 		{
 			field: "acta",
 			headerName: "Resolución",
-			editable: true,
+			editable: isAdmin,
 			headerAlign: "center",
 			align: "center",
 			renderCell: (params) =>
@@ -82,7 +82,7 @@ const AcademicInfo = () => {
 			field: "detalle",
 			headerName: "Observaciones",
 			flex: 1,
-			editable: true,
+			editable: isAdmin,
 		},
 	];
 	const [isEdited, setIsEdited] = useState(false);
@@ -133,6 +133,7 @@ const AcademicInfo = () => {
 					gap={1.5}>
 					<TextField
 						size="small"
+						disabled={!isAdmin}
 						label={`Última reinscripción al año académico: ${
 							ultimaReinscripcion
 								?.toString()
@@ -157,6 +158,7 @@ const AcademicInfo = () => {
 					<TextField
 						size="small"
 						sx={{ minWidth: "350px" }}
+						disabled={!isAdmin}
 						label={`Fecha de última materia aprobada: ${
 							ultimaAprobada
 								?.toString()
@@ -202,6 +204,7 @@ const AcademicInfo = () => {
 							<Switch
 								size="medium"
 								checked={esRegular}
+								disabled={!isAdmin}
 								onChange={async (e) => {
 									await updateStudent(
 										dispatch,
@@ -245,6 +248,7 @@ const AcademicInfo = () => {
 					startIcon={<Save />}
 					variant="contained"
 					disabled={!isEdited}
+					sx={{ display: isAdmin ? "flex" : "none" }}
 					onClick={async () => {
 						await updateStudent(
 							dispatch,

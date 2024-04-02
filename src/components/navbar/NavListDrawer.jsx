@@ -59,6 +59,7 @@ const NavListDrawer = ({ navLinks, setOpen }) => {
 								component={NavLink}
 								to={item.path}
 								sx={{ gap: 2 }}
+								disabled={item.disabled}
 								onClick={() => setOpen(false)}>
 								<Icon
 									sx={{
@@ -83,6 +84,7 @@ const NavListDrawer = ({ navLinks, setOpen }) => {
 				endIcon={<AccountBox />}
 				variant="contained"
 				color="secondary"
+				disabled
 				onClick={() => {
 					setOpen(false);
 				}}>

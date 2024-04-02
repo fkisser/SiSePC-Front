@@ -48,14 +48,14 @@ const Students = () => {
 				const tutor = _tutores.find((tutor) => {
 					return tutor._id === params.value;
 				});
-				return params.value ? `${tutor.apellido} ${tutor.nombre}` : null;
+				return params.value ? `${tutor?.apellido} ${tutor?.nombre}` : null;
 			},
 		},
 	];
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { tutores: _tutores } = useSelector((state) => state.tutores);
-	const { token } = useSelector((state) => state.user.currentUser);
+	const { token, isAdmin } = useSelector((state) => state.user.currentUser);
 	const handleClick = async (params) => {
 		const student = students.find((_student) => {
 			return _student.dni === params.row.dni;
@@ -113,7 +113,7 @@ const Students = () => {
 				<Button
 					variant="contained"
 					startIcon={<Add />}
-					disabled={isLoading}
+					disabled={isLoading || !isAdmin}
 					onClick={() => {
 						setOpen(true);
 					}}>

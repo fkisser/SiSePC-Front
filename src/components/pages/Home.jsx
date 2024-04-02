@@ -20,7 +20,11 @@ const Home = ({ navLinks }) => {
 				gap: 2,
 			}}>
 			{navLinks?.map((navLink) => {
-				if (navLink.title !== "Principal" && navLink.title !== "Cerrar Sesión")
+				if (
+					navLink.title !== "Principal" &&
+					navLink.title !== "Cerrar Sesión" &&
+					!navLink.disabled
+				)
 					return (
 						<HomeCard
 							data={navLink}

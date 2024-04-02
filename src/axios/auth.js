@@ -9,9 +9,9 @@ export const login = async (dispatch, dni, password) => {
     const { tutor, token } = response.data;
     tutor.token = token;
     if (tutor) {
-      if (tutor.isAdmin) {
-        fetchTutores(dispatch, token);
-      }
+      // if (tutor.isAdmin) {
+      fetchTutores(dispatch, token);
+      // }
       dispatch(successUser(tutor));
     }
     else dispatch(errorUser(response.data));
