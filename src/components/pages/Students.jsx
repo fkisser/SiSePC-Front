@@ -33,6 +33,17 @@ const Students = () => {
 			align: "center",
 		},
 		{
+			field: "ingreso",
+			headerName: "Inscripción",
+			headerAlign: "center",
+			align: "center",
+			valueGetter: ({ row }) => {
+				return row?.añoIngreso && row?.cuatIngreso
+					? `${row?.añoIngreso} - ${row?.cuatIngreso}`
+					: "";
+			},
+		},
+		{
 			field: "relPrograma",
 			headerName: "Estado",
 			headerAlign: "center",
@@ -77,6 +88,8 @@ const Students = () => {
 			dni,
 			plan,
 			relPrograma,
+			añoIngreso,
+			cuatIngreso,
 			tutores,
 		} = student;
 		return {
@@ -86,6 +99,8 @@ const Students = () => {
 			dni,
 			carrera: plan.carrera.nombre,
 			plan: plan.año,
+			añoIngreso,
+			cuatIngreso,
 			relPrograma,
 			tutores,
 		};
@@ -106,8 +121,9 @@ const Students = () => {
 				}}>
 				<Typography
 					color="primary"
-					variant="h4"
-					sx={{ fontSize: { xs: 20, sm: 36 } }}>
+					variant="bold"
+					fontWeight={500}
+					sx={{ fontSize: { xs: 20, sm: 26 } }}>
 					Estudiantes inscriptos
 				</Typography>
 				<Button
@@ -159,7 +175,7 @@ const Students = () => {
 							if (params.value === "Pasivo") {
 								return "pasivo";
 							}
-							if (params.value === "Abandono") {
+							if (params.value === "Abandonó") {
 								return "abandono";
 							}
 						}

@@ -20,7 +20,8 @@ const PersonalInfo = () => {
 		horarioTrabajo,
 		detallesTrabajo,
 		relPrograma,
-		ingresoPrograma,
+		añoIngreso,
+		cuatIngreso,
 		tutores,
 	} = useSelector((state) => state.student.currentStudent);
 	const { isLoading } = useSelector((state) => state.student);
@@ -35,23 +36,26 @@ const PersonalInfo = () => {
 			<Box
 				sx={{
 					display: "flex",
-					flexDirection: "column",
 					gap: 2,
 				}}>
-				<Typography
-					variant="h6"
-					color={"primary"}>
-					Datos personales
-				</Typography>
-				<Paper
-					sx={{
-						backgroundColor: "whitesmoke",
-						display: "flex",
-						flexDirection: "column",
-						padding: 2,
-						gap: 1,
-					}}>
-					<Box display={"flex"}>
+				<Box
+					display={"flex"}
+					flexDirection={"column"}
+					gap={2}>
+					<Typography
+						variant="h6"
+						color={"primary"}>
+						Datos personales
+					</Typography>
+					<Paper
+						elevation={5}
+						sx={{
+							backgroundColor: "whitesmoke",
+							display: "flex",
+							flexDirection: "column",
+							padding: 2,
+							gap: 1,
+						}}>
 						<Typography
 							display={"flex"}
 							fontWeight={600}
@@ -75,8 +79,7 @@ const PersonalInfo = () => {
 							DNI:
 							<Typography sx={{ fontWeight: 400 }}>{dni || ""}</Typography>
 						</Typography>
-					</Box>
-					<Box display={"flex"}>
+
 						<Typography
 							display={"flex"}
 							fontWeight={600}
@@ -92,30 +95,36 @@ const PersonalInfo = () => {
 							Celular:
 							<Typography sx={{ fontWeight: 400 }}>{celular || ""}</Typography>
 						</Typography>
-					</Box>
+
+						<Typography
+							display={"flex"}
+							fontWeight={600}
+							gap={1}
+							flex={1}>
+							Localidad:
+							<Typography sx={{ fontWeight: 400 }}>{ciudad || ""}</Typography>
+						</Typography>
+					</Paper>
+				</Box>
+
+				<Box
+					display={"flex"}
+					flexDirection={"column"}
+					gap={2}>
 					<Typography
-						display={"flex"}
-						fontWeight={600}
-						gap={1}
-						flex={1}>
-						Localidad:
-						<Typography sx={{ fontWeight: 400 }}>{ciudad || ""}</Typography>
+						variant="h6"
+						color={"primary"}>
+						Información laboral
 					</Typography>
-				</Paper>
-				<Typography
-					variant="h6"
-					color={"primary"}>
-					Información laboral
-				</Typography>
-				<Paper
-					sx={{
-						backgroundColor: "whitesmoke",
-						display: "flex",
-						flexDirection: "column",
-						padding: 2,
-						gap: 1,
-					}}>
-					<Box display={"flex"}>
+					<Paper
+						elevation={5}
+						sx={{
+							backgroundColor: "whitesmoke",
+							display: "flex",
+							flexDirection: "column",
+							padding: 2,
+							gap: 1,
+						}}>
 						<Typography
 							display={"flex"}
 							alignItems={"center"}
@@ -137,53 +146,62 @@ const PersonalInfo = () => {
 								{relCarrera ? <Check /> : "No"}
 							</Typography>
 						</Typography>
-					</Box>
 
-					<Typography
-						display={"flex"}
-						fontWeight={600}
-						gap={1}
-						flex={1}>
-						Dedicación:
-						<Typography sx={{ fontWeight: 400 }}>
-							{horarioTrabajo || "-"}
+						<Typography
+							display={"flex"}
+							fontWeight={600}
+							gap={1}
+							flex={1}>
+							Dedicación:
+							<Typography sx={{ fontWeight: 400 }}>
+								{horarioTrabajo || "-"}
+							</Typography>
 						</Typography>
-					</Typography>
-					<Typography
-						display={"flex"}
-						fontWeight={600}
-						gap={1}>
-						Descripción:
-						<Typography sx={{ fontWeight: 400 }}>
-							{detallesTrabajo || "-"}
+						<Typography
+							display={"flex"}
+							fontWeight={600}
+							gap={1}>
+							Descripción:
+							<Typography sx={{ fontWeight: 400 }}>
+								{detallesTrabajo || "-"}
+							</Typography>
 						</Typography>
+					</Paper>
+				</Box>
+
+				<Box
+					display={"flex"}
+					flexDirection={"column"}
+					gap={2}>
+					<Typography
+						variant="h6"
+						color={"primary"}>
+						Relación con el Programa
 					</Typography>
-				</Paper>
-				<Typography
-					variant="h6"
-					color={"primary"}>
-					Relación con el Programa
-				</Typography>
-				<Paper
-					sx={{
-						backgroundColor: "whitesmoke",
-						display: "flex",
-						flexDirection: "column",
-						padding: 2,
-						gap: 1,
-					}}>
-					<Box display={"flex"}>
+					<Paper
+						elevation={5}
+						sx={{
+							backgroundColor: "whitesmoke",
+							display: "flex",
+							flexDirection: "column",
+							padding: 2,
+							gap: 1,
+						}}>
 						<Typography
 							display={"flex"}
 							alignItems={"center"}
 							fontWeight={600}
 							gap={1}
 							flex={1}>
-							Fecha de inscripción:
+							Inscripción:
 							<Typography sx={{ fontWeight: 400 }}>
-								{ingresoPrograma
-									? ingresoPrograma.substr(0, 10).split("-").reverse().join("/")
-									: "Sin información"}
+								{añoIngreso ? `${añoIngreso}` : "Sin información del año"}
+							</Typography>
+							-
+							<Typography sx={{ fontWeight: 400 }}>
+								{cuatIngreso
+									? `${cuatIngreso}`
+									: "Sin información del cuatrimestre"}
 							</Typography>
 						</Typography>
 						<Typography
@@ -196,25 +214,21 @@ const PersonalInfo = () => {
 								{relPrograma ? relPrograma : "Sin información"}
 							</Typography>
 						</Typography>
-					</Box>
-					<Typography
-						display={"flex"}
-						alignItems={"center"}
-						fontWeight={600}
-						gap={1}>
-						Tutor/a asignado/a:
-						<Typography sx={{ fontWeight: 400 }}>
-							{tutores
-								? `${tutor?.apellido} ${tutor?.nombre}` ||
-								  "El/la tutor/a no se encuentra en la base de datos, designe otro/a"
-								: "Sin asignar"}
+
+						<Typography
+							display={"flex"}
+							alignItems={"center"}
+							fontWeight={600}
+							gap={1}>
+							Tutor/a asignado/a:
+							<Typography sx={{ fontWeight: 400 }}>
+								{tutores
+									? `${tutor?.apellido} ${tutor?.nombre}` ||
+									  "El/la tutor/a no se encuentra en la base de datos, designe otro/a"
+									: "Sin asignar"}
+							</Typography>
 						</Typography>
-					</Typography>
-				</Paper>
-				<Box
-					display={"flex"}
-					gap={1}
-					justifyContent={"flex-end"}>
+					</Paper>
 					<Button
 						variant="outlined"
 						size="large"
@@ -226,6 +240,11 @@ const PersonalInfo = () => {
 						Modificar
 					</Button>
 				</Box>
+
+				<Box
+					display={"flex"}
+					gap={1}
+					justifyContent={"flex-end"}></Box>
 			</Box>
 			<AddStudent
 				open={open}
@@ -244,7 +263,8 @@ const PersonalInfo = () => {
 					detallesTrabajo,
 					plan: plan._id,
 					relPrograma,
-					ingresoPrograma,
+					añoIngreso,
+					cuatIngreso,
 					tutores,
 				}}
 				id={_id}

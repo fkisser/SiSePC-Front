@@ -17,9 +17,8 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { studentInitialValues } from "./initialValues";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { studentValidationSchema } from "./validationSchema";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -28,188 +27,132 @@ import {
 	updateStudent,
 } from "../../axios/students";
 import { useState } from "react";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 
 const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 	const handleClose = () => {
-		reset(values ? values : studentInitialValues);
 		setOpen(false);
 	};
-	const { control, handleSubmit, reset } = useForm({
-		defaultValues: values
-			? { ...values, ingresoPrograma: values.ingresoPrograma?.substr(0, 10) }
-			: studentInitialValues,
-		resolver: yupResolver(studentValidationSchema),
-		reValidateMode: "onChange",
-	});
+
 	const dispatch = useDispatch();
 	const { token } = useSelector((state) => state.user.currentUser);
 	const { curriculums } = useSelector((state) => state.curriculums);
 	const { tutores } = useSelector((state) => state.tutores);
 	const { isLoading, error } = useSelector((state) => state.student);
 	const [openBDr, setOpenBDr] = useState(false);
+
 	const handleCloseBDr = () => {
 		setOpenBDr(false);
+		handleClose();
 	};
-	const onSubmit = async (data) => {
-		let result = false;
+	const handleSubmit = async (data) => {
+		setOpenBDr(true); // Mostrar Backdrop
 		if (values) {
-			result = await updateStudent(dispatch, token, data, id);
+			await updateStudent(dispatch, token, data, id);
 			//fetch solo al student modificado
 		} else {
-			result = await createStudent(dispatch, token, data);
+			await createStudent(dispatch, token, data);
 			fetchStudents(dispatch, token);
 		}
-		setOpenBDr(true);
-		if (result) handleClose();
 	};
-
 	return (
 		<Dialog
 			open={open}
-			onClose={handleClose}>
-			<DialogTitle>
+			onClose={handleClose}
+			fullWidth
+			maxWidth={"lg"}>
+			<DialogTitle color={"primary"}>
 				{values ? "Modificar información personal" : "Agregar estudiante"}
 			</DialogTitle>
 			<DialogContent>
-				<form onSubmit={handleSubmit(onSubmit)}>
-					<Box
-						sx={{ display: "grid", gap: 2, justifyContent: "center", mt: 2 }}>
-						<Box
-							display={"flex"}
-							gap={1}
-							sx={{ flexDirection: { xs: "column", sm: "row" } }}>
-							<Controller
-								name="apellido"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										{...field}
+				<Formik
+					initialValues={values ? { ...values } : studentInitialValues}
+					validationSchema={studentValidationSchema}
+					onSubmit={handleSubmit}>
+					{({ errors, touched }) => (
+						<Form>
+							<Box
+								display="flex"
+								flexDirection="column"
+								gap={1}
+								marginTop={1}>
+								<Box
+									display={"flex"}
+									gap={1}>
+									<Field
+										as={TextField}
 										name="apellido"
-										type="text"
 										label="Apellido"
 										variant="outlined"
-										required
-										error={String(error).includes("apellido")}
-										helperText={
-											String(error).includes("apellido") ? String(error) : ""
-										}
+										error={touched.apellido && Boolean(errors.apellido)}
+										helperText={<ErrorMessage name="apellido" />}
+										fullWidth
 									/>
-								)}
-							/>
-							<Controller
-								name="nombre"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										{...field}
+									<Field
+										as={TextField}
 										name="nombre"
-										type="text"
-										required
 										label="Nombre"
 										variant="outlined"
-										error={String(error).includes("nombre")}
-										helperText={
-											String(error).includes("nombre") ? String(error) : ""
-										}
+										error={touched.nombre && Boolean(errors.nombre)}
+										helperText={<ErrorMessage name="nombre" />}
+										fullWidth
 									/>
-								)}
-							/>
-							<Controller
-								name="dni"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										{...field}
+									<Field
+										as={TextField}
 										name="dni"
 										type="number"
-										min={1000000}
-										required
 										label="DNI"
 										variant="outlined"
-										error={String(error).includes("DNI")}
-										helperText={
-											String(error).includes("DNI") ? String(error) : ""
-										}
-									/>
-								)}
-							/>
-						</Box>
-						<Box
-							display={"flex"}
-							gap={1}
-							sx={{ flexDirection: { xs: "column", sm: "row" } }}>
-							<Controller
-								name="mail"
-								control={control}
-								render={({ field }) => (
-									<TextField
+										error={touched.dni && Boolean(errors.dni)}
+										helperText={<ErrorMessage name="dni" />}
 										fullWidth
-										{...field}
+									/>
+								</Box>
+								<Box
+									display={"flex"}
+									gap={1}>
+									<Field
+										as={TextField}
 										name="mail"
-										type="email"
-										required
 										label="Mail"
+										type="email"
 										variant="outlined"
-										error={String(error).includes("mail")}
-										helperText={
-											String(error).includes("mail") ? String(error) : ""
-										}
-									/>
-								)}
-							/>
-							<Controller
-								name="celular"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										{...field}
+										error={touched.mail && Boolean(errors.mail)}
+										helperText={<ErrorMessage name="mail" />}
 										fullWidth
+									/>
+									<Field
+										as={TextField}
 										name="celular"
-										type="text"
 										label="Celular"
 										variant="outlined"
-										error={String(error).includes("celular")}
-										helperText={
-											String(error).includes("celular") ? String(error) : ""
-										}
+										error={touched.celular && Boolean(errors.celular)}
+										helperText={<ErrorMessage name="celular" />}
+										fullWidth
 									/>
-								)}
-							/>
-						</Box>
-						<Controller
-							name="ciudad"
-							control={control}
-							render={({ field }) => (
-								<TextField
-									{...field}
-									name="ciudad"
-									type="text"
-									label="Localidad"
-									variant="outlined"
-									error={String(error).includes("localidad")}
-									helperText={
-										String(error).includes("localidad") ? String(error) : ""
-									}
-								/>
-							)}
-						/>
-						<Controller
-							name="plan"
-							control={control}
-							render={({ field }) => (
-								<Box position={"relative"}>
+									<Field
+										as={TextField}
+										name="ciudad"
+										label="Ciudad"
+										variant="outlined"
+										error={touched.ciudad && Boolean(errors.ciudad)}
+										helperText={<ErrorMessage name="ciudad" />}
+										fullWidth
+									/>
+								</Box>
+								<Box
+									display={"flex"}
+									gap={1}>
 									<FormControl fullWidth>
-										<InputLabel id="plan">Plan *</InputLabel>
-										<Select
-											fullWidth
-											{...field}
-											disabled={values ? true : false}
-											labelId="plan"
+										<InputLabel id="plan">Plan</InputLabel>
+										<Field
+											as={Select}
 											name="plan"
-											type="text"
-											required
+											labelId="plan"
 											label="Plan"
-											variant="outlined">
+											variant="outlined"
+											error={touched.plan && Boolean(errors.plan)}
+											helperText={<ErrorMessage name="plan" />}>
 											{curriculums?.map((curriculum) => (
 												<MenuItem
 													key={curriculum._id}
@@ -217,107 +160,160 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 														curriculum._id
 													}>{`${curriculum.año} - ${curriculum.carrera.nombre}`}</MenuItem>
 											))}
-										</Select>
+										</Field>
+										<ErrorMessage
+											name="plan"
+											component="p"
+											style={{
+												color: "#d32f2f",
+												fontSize: 12.5,
+												paddingLeft: 15,
+												marginTop: 1,
+											}}
+										/>
+									</FormControl>
+									<FormControl fullWidth>
+										<InputLabel id="añoIngreso">Año de inscripción</InputLabel>
+										<Field
+											as={Select}
+											name="añoIngreso"
+											labelId="añoIngreso"
+											label="Año de inscripción"
+											variant="outlined"
+											error={touched.añoIngreso && Boolean(errors.añoIngreso)}>
+											<MenuItem value="">Desconocido</MenuItem>
+											<MenuItem value="2023">2023</MenuItem>
+											<MenuItem value="2024">2024</MenuItem>
+											<MenuItem value="2025">2025</MenuItem>
+											<MenuItem value="2026">2026</MenuItem>
+											<MenuItem value="2027">2027</MenuItem>
+											<MenuItem value="2028">2028</MenuItem>
+											<MenuItem value="2029">2029</MenuItem>
+											<MenuItem value="2030">2030</MenuItem>
+										</Field>
+										<ErrorMessage
+											name="añoIngreso"
+											component="div"
+										/>
+									</FormControl>
+									<FormControl fullWidth>
+										<InputLabel id="cuatIngreso">
+											Cuat. de inscripción
+										</InputLabel>
+										<Field
+											as={Select}
+											name="cuatIngreso"
+											labelId="cuatIngreso"
+											label="Cuat. de inscripción"
+											variant="outlined"
+											error={
+												touched.cuatIngreso && Boolean(errors.cuatIngreso)
+											}>
+											<MenuItem value="">Desconocido</MenuItem>
+											<MenuItem value="1C">1C</MenuItem>
+											<MenuItem value="2C">2C</MenuItem>
+										</Field>
+										<ErrorMessage
+											name="cuatIngreso"
+											component="div"
+										/>
+									</FormControl>
+									<FormControl fullWidth>
+										<InputLabel id="relPrograma">Estado </InputLabel>
+										<Field
+											as={Select}
+											name="relPrograma"
+											labelId="relPrograma"
+											label="Estado"
+											variant="outlined"
+											error={
+												touched.relPrograma && Boolean(errors.relPrograma)
+											}>
+											<MenuItem value="Activo">Activo</MenuItem>
+											<MenuItem value="Pasivo">Pasivo</MenuItem>
+											<MenuItem value="Abandonó">Abandonó</MenuItem>
+											<MenuItem value="Graduado">Graduado</MenuItem>
+										</Field>
+										<ErrorMessage
+											name="relPrograma"
+											component="div"
+										/>
 									</FormControl>
 								</Box>
-							)}
-						/>
-						<Box
-							display={"flex"}
-							gap={1}
-							sx={{ flexDirection: { xs: "column", sm: "row" } }}>
-							<Controller
-								name="ingresoPrograma"
-								control={control}
-								render={({ field }) => (
-									<TextField
-										fullWidth
-										{...field}
-										labelId="ingresoPrograma"
-										name="ingresoPrograma"
-										type="date"
-										label={`Fecha de inscripción: ${
-											values
-												? values.ingresoPrograma
-														?.substr(0, 10)
-														.split("-")
-														.reverse()
-														.join("/")
-												: ""
-										}`}
-										value={values && values.ingresoPrograma?.substr(0, 10)}
-										required
-										InputLabelProps={{ shrink: true }}
-										variant="outlined"
-									/>
-								)}
-							/>
-							<Controller
-								name="relPrograma"
-								control={control}
-								render={({ field }) => (
-									<Box
-										display={"flex"}
-										position={"relative"}
-										width={"100%"}>
-										<FormControl fullWidth>
-											<InputLabel
-												id="relPrograma"
-												sx={{ backgroundColor: "white", px: 0.75, ml: -0.5 }}>
-												Estado
-											</InputLabel>
-											<Select
-												fullWidth
-												{...field}
-												labelId="relPrograma"
-												name="relPrograma"
-												type="text"
-												// defaultValue={values ? values.relPrograma : undefined}
-												variant="outlined">
-												<MenuItem
-													value={"Activo"}
-													defaultValue={values?.relPrograma === "Activo"}>
-													Activo
-												</MenuItem>
-												<MenuItem
-													value={"Pasivo"}
-													defaultValue={values?.relPrograma === "Pasivo"}>
-													Pasivo
-												</MenuItem>
-												<MenuItem
-													value={"Abandono"}
-													defaultValue={values?.relPrograma === "Abandono"}>
-													Abandonó
-												</MenuItem>
-												<MenuItem
-													value={"Graduado"}
-													defaultValue={values?.relPrograma === "Graduado"}>
-													Graduado/a
-												</MenuItem>
-											</Select>
-										</FormControl>
-									</Box>
-								)}
-							/>
-						</Box>
-						<Controller
-							name="tutores"
-							control={control}
-							render={({ field }) => (
-								<Box position={"relative"}>
+								<Box
+									display={"flex"}
+									gap={1}
+									alignItems={"center"}>
 									<FormControl fullWidth>
-										<InputLabel
-											id="tutores"
-											sx={{ backgroundColor: "white", px: 0.75, ml: -0.5 }}>
-											Tutor/a designado/a
-										</InputLabel>
-										<Select
-											fullWidth
-											{...field}
-											labelId="tutores"
+										<Box>
+											<FormLabel htmlFor="trabaja">Trabaja</FormLabel>
+											<Field
+												as={Switch}
+												name="trabaja"
+												id="trabaja"
+												label="Trabaja"
+												variant="outlined"
+												error={touched.trabaja && Boolean(errors.trabaja)}
+											/>
+										</Box>
+									</FormControl>
+									<FormControl fullWidth>
+										<Box>
+											<FormLabel htmlFor="relCarrera">
+												El trabajo está relacionado con la carrera
+											</FormLabel>
+											<Field
+												as={Switch}
+												name="relCarrera"
+												id="relCarrera"
+												label="El trabajo está relacionado con la carrera"
+												variant="outlined"
+												error={touched.relCarrera && Boolean(errors.relCarrera)}
+											/>
+										</Box>
+									</FormControl>
+									<Field
+										as={TextField}
+										name="horarioTrabajo"
+										label="Horario de trabajo"
+										variant="outlined"
+										error={
+											touched.horarioTrabajo && Boolean(errors.horarioTrabajo)
+										}
+										helperText={<ErrorMessage name="horarioTrabajo" />}
+										fullWidth
+									/>
+								</Box>
+								<Field
+									as={TextField}
+									name="detallesTrabajo"
+									label="Detalles del trabajo"
+									variant="outlined"
+									multiline
+									rows={2}
+									error={
+										touched.detallesTrabajo && Boolean(errors.detallesTrabajo)
+									}
+									helperText={<ErrorMessage name="detallesTrabajo" />}
+								/>
+								<Box
+									display={"flex"}
+									gap={1}
+									justifyContent={"space-between"}>
+									<FormControl sx={{ width: "30%" }}>
+										<InputLabel id="tutores">Tutor/a designado/a</InputLabel>
+										<Field
+											as={Select}
 											name="tutores"
-											type="text"
-											variant="outlined">
+											labelId="tutores"
+											label="Tutor/a designado/a"
+											variant="outlined"
+											error={touched.tutores && Boolean(errors.tutores)}>
+											<MenuItem
+												value={""}
+												defaultValue={"Ninguno"}>
+												Ninguno
+											</MenuItem>
 											{tutores.map((tutor) => (
 												<MenuItem
 													key={tutor._id}
@@ -325,120 +321,55 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 														tutor._id
 													}>{`${tutor.nombre} ${tutor.apellido}`}</MenuItem>
 											))}
-										</Select>
+										</Field>
+										<ErrorMessage
+											name="relPrograma"
+											component="div"
+										/>{" "}
 									</FormControl>
+									<DialogActions>
+										<Button
+											color={"error"}
+											onClick={handleClose}>
+											Cancelar
+										</Button>
+										<Button
+											type="submit"
+											variant="contained"
+											color="primary">
+											{isLoading ? (
+												<CircularProgress size={24} />
+											) : values ? (
+												"Modificar"
+											) : (
+												"Agregar"
+											)}
+										</Button>
+									</DialogActions>
 								</Box>
-							)}
-						/>
-						<Box
-							display={"flex"}
-							gap={1}
-							justifyContent={"space-between"}
-							sx={{ flexDirection: { xs: "column", sm: "row" } }}>
-							<Controller
-								name="trabaja"
-								control={control}
-								render={({ field }) => (
-									<FormControl>
-										<Box
-											display={"flex"}
-											alignItems={"center"}
-											gap={1}>
-											<Switch
-												{...field}
-												checked={field.value}
-												name="trabaja"
-												id="trabaja"
-											/>
-											<FormLabel htmlFor="trabaja">Trabaja</FormLabel>
-										</Box>
-									</FormControl>
-								)}
-							/>
-							<Controller
-								name="relCarrera"
-								control={control}
-								render={({ field }) => (
-									<FormControl>
-										<Box
-											display={"flex"}
-											alignItems={"center"}
-											gap={1}>
-											<Switch
-												{...field}
-												checked={field.value}
-												name="relCarrera"
-												id="relCarrera"
-											/>
-											<FormLabel htmlFor="relCarrera">
-												El trabajo está relacionado con la carrera
-											</FormLabel>
-										</Box>
-									</FormControl>
-								)}
-							/>
-						</Box>
-						<Controller
-							name="horarioTrabajo"
-							control={control}
-							render={({ field }) => (
-								<TextField
-									{...field}
-									name="horarioTrabajo"
-									type="text"
-									placeholder="Horarios de trabajo"
-									variant="outlined"
-								/>
-							)}
-						/>
-						<Controller
-							name="detallesTrabajo"
-							control={control}
-							render={({ field }) => (
-								<TextField
-									{...field}
-									name="detallesTrabajo"
-									type="text"
-									placeholder="Descripcion del trabajo"
-									variant="outlined"
-									multiline
-									maxRows={3}
-								/>
-							)}
-						/>
-
-						<DialogActions>
-							<Button onClick={handleClose}>Cancelar</Button>
-							<Button
-								type="submit"
-								variant="contained"
-								color="primary">
-								{isLoading ? (
-									<CircularProgress size={24} />
-								) : values ? (
-									"Modificar"
-								) : (
-									"Agregar"
-								)}
-							</Button>
-						</DialogActions>
-					</Box>
-				</form>
+							</Box>
+						</Form>
+					)}
+				</Formik>
+				<Backdrop
+					sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+					open={openBDr}
+					onClick={handleCloseBDr}>
+					{isLoading ? (
+						<CircularProgress color="inherit" />
+					) : (
+						<Paper
+							elevation={3}
+							sx={{ padding: 4 }}>
+							<Typography
+								variant={"h6"}
+								color={error ? "error" : "primary"}>
+								{error ? error : <ThumbUpIcon fontSize="large" />}
+							</Typography>
+						</Paper>
+					)}
+				</Backdrop>
 			</DialogContent>
-			<Backdrop
-				open={openBDr}
-				onClick={handleCloseBDr}
-				sx={{ zIndex: 3 }}>
-				<Paper sx={{ p: 4 }}>
-					<Typography color={error ? "error" : "success"}>
-						{error
-							? error
-							: values
-							? "Estudiante modificado correctamente"
-							: "Estudiante agregado correctamente"}
-					</Typography>
-				</Paper>
-			</Backdrop>
 		</Dialog>
 	);
 };

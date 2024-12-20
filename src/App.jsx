@@ -54,7 +54,15 @@ export default function App() {
 	return (
 		<Grid alignContent={"center"}>
 			<Navbar navLinks={navLinks} />
-			<Container sx={{ display: "grid", gap: 1, my: 2, mx: "auto", p: 0 }}>
+			<Container
+				sx={{
+					display: "grid",
+					gap: 1,
+					my: 2,
+					mx: "auto",
+					p: 0,
+					width: "100vw",
+				}}>
 				<Routes>
 					<Route
 						path="/"
