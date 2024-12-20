@@ -40,12 +40,29 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 	const { tutores } = useSelector((state) => state.tutores);
 	const { isLoading, error } = useSelector((state) => state.student);
 	const [openBDr, setOpenBDr] = useState(false);
+	const [trabajaChecked, setTrabajaChecked] = useState(values?.trabaja);
+	const [relChecked, setRelChecked] = useState(values?.relCarrera);
 
 	const handleCloseBDr = () => {
 		setOpenBDr(false);
 		handleClose();
 	};
+
+	const handleSelectChange = (e) => {
+		console.log(e.target);
+		if (e.target.name === "trabaja") {
+			setTrabajaChecked(e.target.checked);
+			values.trabaja = e.target.checked;
+		}
+		if (e.target.name === "relCarrera") {
+			setRelChecked(e.target.checked);
+			values.relCarrera = e.target.checked;
+		}
+	};
 	const handleSubmit = async (data) => {
+		data.trabaja = trabajaChecked;
+		data.relCarrera = relChecked;
+		console.log(data);
 		setOpenBDr(true); // Mostrar Backdrop
 		if (values) {
 			await updateStudent(dispatch, token, data, id);
@@ -141,7 +158,7 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 									/>
 								</Box>
 								<Box
-									display={"flex"}
+									display={values ? "none" : "flex"}
 									gap={1}>
 									<FormControl fullWidth>
 										<InputLabel id="plan">Plan</InputLabel>
@@ -253,6 +270,8 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 												id="trabaja"
 												label="Trabaja"
 												variant="outlined"
+												checked={trabajaChecked}
+												onChange={handleSelectChange}
 												error={touched.trabaja && Boolean(errors.trabaja)}
 											/>
 										</Box>
@@ -268,6 +287,8 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 												id="relCarrera"
 												label="El trabajo está relacionado con la carrera"
 												variant="outlined"
+												checked={relChecked}
+												onChange={handleSelectChange}
 												error={touched.relCarrera && Boolean(errors.relCarrera)}
 											/>
 										</Box>

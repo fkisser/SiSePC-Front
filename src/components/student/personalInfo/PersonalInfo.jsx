@@ -41,7 +41,8 @@ const PersonalInfo = () => {
 				<Box
 					display={"flex"}
 					flexDirection={"column"}
-					gap={2}>
+					gap={2}
+					width={"100%"}>
 					<Typography
 						variant="h6"
 						color={"primary"}>
@@ -110,7 +111,8 @@ const PersonalInfo = () => {
 				<Box
 					display={"flex"}
 					flexDirection={"column"}
-					gap={2}>
+					gap={2}
+					width={"100%"}>
 					<Typography
 						variant="h6"
 						color={"primary"}>
@@ -172,7 +174,8 @@ const PersonalInfo = () => {
 				<Box
 					display={"flex"}
 					flexDirection={"column"}
-					gap={2}>
+					gap={2}
+					width={"100%"}>
 					<Typography
 						variant="h6"
 						color={"primary"}>
