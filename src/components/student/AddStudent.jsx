@@ -158,7 +158,7 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 									/>
 								</Box>
 								<Box
-									display={values ? "none" : "flex"}
+									display={"flex"}
 									gap={1}>
 									<FormControl fullWidth>
 										<InputLabel id="plan">Plan</InputLabel>
@@ -168,6 +168,7 @@ const AddStudent = ({ open, setOpen, values = null, id = null }) => {
 											labelId="plan"
 											label="Plan"
 											variant="outlined"
+											disabled={values ? true : false}
 											error={touched.plan && Boolean(errors.plan)}
 											helperText={<ErrorMessage name="plan" />}>
 											{curriculums?.map((curriculum) => (
