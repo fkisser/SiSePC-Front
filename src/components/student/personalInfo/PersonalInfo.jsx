@@ -23,6 +23,7 @@ const PersonalInfo = () => {
 		añoIngreso,
 		cuatIngreso,
 		tutores,
+		detallePlan,
 	} = useSelector((state) => state.student.currentStudent);
 	const { isLoading } = useSelector((state) => state.student);
 	const { isAdmin } = useSelector((state) => state.user.currentUser);
@@ -213,9 +214,23 @@ const PersonalInfo = () => {
 							fontWeight={600}
 							gap={1}>
 							Estado:
-							<Typography sx={{ fontWeight: 400 }}>
-								{relPrograma ? relPrograma : "Sin información"}
-							</Typography>
+							{relPrograma && relPrograma === "Graduado" ? (
+								<Typography sx={{ fontWeight: 400 }}>
+									{`${relPrograma} - ${
+										detallePlan[detallePlan.length - 1].fecha
+											? detallePlan[detallePlan.length - 1].fecha
+													.slice(0, 10)
+													.split("-")
+													.reverse()
+													.join("/")
+											: "Sin fecha"
+									}` || "Sin información"}
+								</Typography>
+							) : (
+								<Typography sx={{ fontWeight: 400 }}>
+									{relPrograma || "Sin información"}
+								</Typography>
+							)}
 						</Typography>
 
 						<Typography
