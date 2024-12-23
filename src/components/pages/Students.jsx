@@ -111,7 +111,7 @@ const Students = () => {
 			sx={{
 				display: "flex",
 				flexDirection: "column",
-				gap: 2,
+				gap: 1,
 			}}>
 			<Box
 				sx={{
@@ -128,6 +128,7 @@ const Students = () => {
 				</Typography>
 				<Button
 					variant="contained"
+					size="small"
 					startIcon={<Add />}
 					disabled={isLoading || !isAdmin}
 					onClick={() => {
@@ -139,7 +140,7 @@ const Students = () => {
 
 			<Box
 				sx={{
-					height: "80vh",
+					height: "75vh",
 					"& .graduado": {
 						backgroundColor: "rgba(0, 107, 128, 0.3)",
 					},
