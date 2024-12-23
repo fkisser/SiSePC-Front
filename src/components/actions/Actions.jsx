@@ -56,8 +56,8 @@ const Actions = ({ student = false, course = false }) => {
 		{
 			field: "descripcion",
 			headerName: "Descripción",
-			flex: 1,
 			editable: true,
+			width: 200,
 		},
 		{
 			field: "archivo",
@@ -65,7 +65,7 @@ const Actions = ({ student = false, course = false }) => {
 			headerAlign: "center",
 			align: "center",
 			editable: true,
-			width: 75,
+			width: 60,
 			renderCell: (params) =>
 				params.value ? (
 					<IconButton
@@ -118,9 +118,9 @@ const Actions = ({ student = false, course = false }) => {
 			sx={{
 				display: "flex",
 				flexDirection: "column",
-				minHeight: student || course ? "65vh" : "89vh",
-				height: "100%",
-				alignItems: "flex-end",
+				// minHeight: student || course ? "65vh" : "89vh",
+				// height: "100%",
+				// alignItems: "flex-end",
 				"& .success": {
 					backgroundColor: "rgba(0, 128, 34, 0.3)",
 				},
@@ -167,6 +167,7 @@ const Actions = ({ student = false, course = false }) => {
 				</Button>
 			</Box>
 			<DataGrid
+				scrollbarSize={0}
 				rows={visibleActions}
 				editMode="row"
 				density="compact"
