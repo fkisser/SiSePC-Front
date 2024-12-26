@@ -97,8 +97,8 @@ const Students = () => {
 			apellido,
 			nombre,
 			dni,
-			carrera: plan.carrera.nombre,
-			plan: plan.año,
+			carrera: plan?.carrera?.nombre,
+			plan: plan?.año,
 			añoIngreso,
 			cuatIngreso,
 			relPrograma,
@@ -156,7 +156,7 @@ const Students = () => {
 					".none": { borderRight: "1px solid rgba(125, 125, 125, 0.20)" },
 				}}>
 				<DataGrid
-					rows={visibleStudents}
+					rows={visibleStudents || []}
 					columns={VISIBLE_FIELDS}
 					slots={{ toolbar: GridToolbar }}
 					loading={isLoading}
