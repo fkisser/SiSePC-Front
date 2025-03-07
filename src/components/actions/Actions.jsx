@@ -114,7 +114,7 @@ const Actions = ({ student = false, course = false }) => {
 	const dispatch = useDispatch();
 	return (
 		<Box
-			gap={2}
+			gap={1}
 			sx={{
 				display: "flex",
 				flexDirection: "column",
@@ -225,6 +225,7 @@ const Actions = ({ student = false, course = false }) => {
 				sx={{
 					display: "flex",
 					width: "100%",
+					maxWidth: "85vw",
 					"&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell": {
 						py: "8px",
 					},
