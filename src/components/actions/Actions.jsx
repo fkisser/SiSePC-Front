@@ -47,6 +47,8 @@ const Actions = ({ student = false, course = false }) => {
 			editable: true,
 			headerAlign: "center",
 			align: "center",
+			sortable: true,
+			sortComparator: (v1, v2) => new Date(v2) - new Date(v1),
 			valueGetter: (params) => (params.value ? new Date(params.value) : ""),
 			renderCell: (params) =>
 				`${params.value.getUTCDate()}/${
@@ -167,6 +169,11 @@ const Actions = ({ student = false, course = false }) => {
 				</Button>
 			</Box>
 			<DataGrid
+				initialState={{
+					sorting: {
+						sortModel: [{ field: "fecha", sort: "asc" }],
+					},
+				}}
 				scrollbarSize={0}
 				rows={visibleActions}
 				editMode="row"
