@@ -40,7 +40,7 @@ const PersonalInfo = () => {
 
 		try {
 			// Nota: Ajustá la URL ('http://localhost:3000/api...') al puerto y ruta real de tu backend.
-			const response = await fetch(`http://localhost:3000/api/estudiantes/${_id}`, {
+			const response = await fetch(`https://si-se-pc-back.vercel.app/api/estudiantes/${_id}`, {
 				method: 'DELETE', // o 'PUT' dependiendo de cómo lo armaste en las rutas de tu backend
 				headers: {
 					'Content-Type': 'application/json'
