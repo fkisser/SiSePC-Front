@@ -26,7 +26,8 @@ const PersonalInfo = () => {
 		detallePlan,
 	} = useSelector((state) => state.student.currentStudent);
 	const { isLoading } = useSelector((state) => state.student);
-	const { isAdmin } = useSelector((state) => state.user.currentUser);
+	//const { isAdmin } = useSelector((state) => state.user.currentUser);
+	const { isAdmin, token } = useSelector((state) => state.user.currentUser);
 	const { tutores: _tutores } = useSelector((state) => state.tutores);
 	const tutor = _tutores.find((tutor) => {
 		return tutor._id === tutores;
@@ -39,13 +40,13 @@ const PersonalInfo = () => {
 		if (!confirmar) return;
 
 		try {
-			const token = localStorage.getItem("token");
+			// Borramos la línea de localStorage porque el token ya viene de arriba (Redux)
 
 			const response = await fetch(`https://si-se-pc-back.vercel.app/estudiantes/${_id}`, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
-					'x-token': token || ''
+					'x-token': token || '' // Acá se usa el token de Redux
 				}
 			});
 
