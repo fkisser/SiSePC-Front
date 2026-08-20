@@ -39,20 +39,22 @@ const PersonalInfo = () => {
 		if (!confirmar) return;
 
 		try {
-			// Nota: Ajustá la URL ('http://localhost:3000/api...') al puerto y ruta real de tu backend.
-			const response = await fetch(`https://si-se-pc-back.vercel.app/api/estudiantes/${_id}`, {
-				method: 'DELETE', // o 'PUT' dependiendo de cómo lo armaste en las rutas de tu backend
+			const token = localStorage.getItem("token");
+
+			const response = await fetch(`https://si-se-pc-back.vercel.app/estudiantes/${_id}`, {
+				method: 'DELETE',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'x-token': token || ''
 				}
 			});
 
 			if (response.ok) {
 				alert("Estudiante eliminado con éxito");
-				// Te redirige a la página principal/lista de estudiantes luego de borrar
-				window.location.href = "/"; 
+				window.location.href = "/estudiantes"; 
 			} else {
-				alert("Hubo un error al intentar eliminar el estudiante.");
+				const data = await response.json().catch(() => ({}));
+				alert(data.msg || "Hubo un error al intentar eliminar el estudiante.");
 			}
 		} catch (error) {
 			console.error("Error en la petición:", error);
