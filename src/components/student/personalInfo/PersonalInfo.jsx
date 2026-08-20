@@ -1,4 +1,4 @@
-import { Check, Edit } from "@mui/icons-material";
+import { Check, Edit, Delete } from "@mui/icons-material";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -32,6 +32,34 @@ const PersonalInfo = () => {
 		return tutor._id === tutores;
 	});
 	const [open, setOpen] = useState(false);
+	
+	// --- NUEVA FUNCIÓN PARA ELIMINAR ---
+	const handleEliminar = async () => {
+		const confirmar = window.confirm("¿Estás seguro/a de que querés eliminar a este estudiante?");
+		if (!confirmar) return;
+
+		try {
+			// Nota: Ajustá la URL ('http://localhost:3000/api...') al puerto y ruta real de tu backend.
+			const response = await fetch(`http://localhost:3000/api/estudiantes/${_id}`, {
+				method: 'DELETE', // o 'PUT' dependiendo de cómo lo armaste en las rutas de tu backend
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			if (response.ok) {
+				alert("Estudiante eliminado con éxito");
+				// Te redirige a la página principal/lista de estudiantes luego de borrar
+				window.location.href = "/"; 
+			} else {
+				alert("Hubo un error al intentar eliminar el estudiante.");
+			}
+		} catch (error) {
+			console.error("Error en la petición:", error);
+			alert("Error de red al intentar eliminar.");
+		}
+	};
+	// --- FIN DE LA NUEVA FUNCIÓN ---
 	return (
 		<>
 			<Box
@@ -257,6 +285,17 @@ const PersonalInfo = () => {
 						}}>
 						Modificar
 					</Button>
+					{/* --- NUEVO BOTÓN ELIMINAR --- */}
+					<Button
+						variant="outlined"
+						color="error"
+						size="large"
+						startIcon={<Delete />}
+						disabled={isLoading || !isAdmin} 
+						onClick={handleEliminar}>
+						Eliminar
+					</Button>
+					{/* --- FIN NUEVO BOTÓN --- */}
 				</Box>
 
 				<Box
