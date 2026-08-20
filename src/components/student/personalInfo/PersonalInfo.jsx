@@ -41,7 +41,7 @@ const PersonalInfo = () => {
 		try {
 			const token = localStorage.getItem("token");
 
-			const response = await fetch(`https://si-se-pc-back.vercel.app/estudiante/${_id}`, {
+			const response = await fetch(`https://si-se-pc-back.vercel.app/estudiantes/${_id}`, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
